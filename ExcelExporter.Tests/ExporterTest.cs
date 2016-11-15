@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ClosedXML.Excel;
 using System.IO;
 using FluentAssertions;
+using System.Reflection;
 
 namespace ExcelExporter.Tests
 {
@@ -13,7 +14,8 @@ namespace ExcelExporter.Tests
     public class ExporterTest
     {
         [TestMethod]
-        public void TestAdd()
+        [TestCategory("ExcelExporter")]
+        public void TestAddData()
         {
 
             var exporter = new Exporter<TestListItem>();
@@ -29,7 +31,8 @@ namespace ExcelExporter.Tests
 
 
         [TestMethod]
-        public void TestAdd2()
+        [TestCategory("ExcelExporter")]
+        public void TestAddDataNamedSheet()
         {
 
             var exporter = new Exporter<TestListItem>();
@@ -44,6 +47,7 @@ namespace ExcelExporter.Tests
         }
 
         [TestMethod]
+        [TestCategory("ExcelExporter")]
         public void TestExport()
         {
 
@@ -52,7 +56,7 @@ namespace ExcelExporter.Tests
             var items = GenerateItems(3);
 
             var exporter = new Exporter<TestListItem>()
-                .SetData(sheetTitle, items)                
+                .SetData(sheetTitle, items)
                 .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
                 .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
                 .AddFormat(p => p.PropC == 1, 20);
@@ -60,7 +64,6 @@ namespace ExcelExporter.Tests
 
             var result = exporter.Export();
 
-            System.IO.File.WriteAllBytes(@"d:\pp.xlsx", result);
 
             using (var stream = new MemoryStream(result))
             {
@@ -70,9 +73,49 @@ namespace ExcelExporter.Tests
                 var firstSheet = workbook.Worksheets.Worksheet(1);
                 firstSheet.Name.Should().Be(sheetTitle);
 
+                firstSheet.LastRowUsed().RowNumber()
+                    .Should().Be(items.Count + 1, $"Hay {items.Count} datos y una mas de cabecera");
+
             }
 
         }
+
+        [TestMethod]
+        [TestCategory("ExcelExporter")]
+        public void TestUseExistingExcel()
+        {
+            var items = GenerateItems(3);
+
+            var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporter.Tests.Test.xlsx");
+
+            var exporter = new Exporter<TestListItem>(excelFileStream)
+                .SetData(items)
+                .JumpHeaders()
+                .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
+                .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
+                .AddFormat(p => p.PropC == 1, 20);
+
+            var result = exporter.Export();
+
+            //System.IO.File.WriteAllBytes(@"d:\pp.xlsx", result);
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                workbook.Worksheets.Count.Should().Be(1);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Name
+                    .Should()
+                    .Be("Hoja1", "el nombre de la hoja 1 en el excel de ejemplo es Hoja 1");
+
+                firstSheet.LastRowUsed().RowNumber()
+                    .Should().Be(items.Count + 1, $"el excel de ejemplo tiene cabecera y hay {items.Count} datos");
+            }
+
+        }
+
 
         private List<TestListItem> GenerateItems(int numItems)
         {

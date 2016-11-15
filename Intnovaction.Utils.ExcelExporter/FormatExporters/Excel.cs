@@ -22,28 +22,57 @@ namespace IntNovAction.Utils.FormatExporters
 
         public override byte[] Export(Exporter<TItem> exporter)
         {
-            var workbook = new XLWorkbook();
 
-            var orderedSheets = exporter._data.OrderBy(p => p.Key.Order);
+            XLWorkbook workbook = null;
 
-            foreach (var sheetItem in orderedSheets)
+            try
             {
-                // Creamos el worksheet
-                ProcessExcelSheet(exporter, workbook, sheetItem);
-            }
+                if (exporter._existingFileStream != null)
+                {
+                    workbook = new XLWorkbook(exporter._existingFileStream);
+                }
+                else
+                {
+                    workbook = new XLWorkbook();
+                }
 
-            using (var ms = new MemoryStream())
+                var orderedSheets = exporter._data.OrderBy(p => p.Key.Order).ToList();
+
+                for (int i = 0; i < orderedSheets.Count; i++)
+                {
+                    var sheetInfo = orderedSheets[i];
+                    // Creamos el worksheet
+                    ProcessExcelSheet(exporter, workbook, sheetInfo, i);
+                }
+
+                using (var ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    return ms.ToArray();
+                }
+
+            }
+            finally
             {
-                workbook.SaveAs(ms);
-                return ms.ToArray();
+                if (workbook != null)
+                {
+                    workbook.Dispose();
+                }
             }
-
         }
 
-        private void ProcessExcelSheet(Exporter<TItem> exporter, XLWorkbook workbook, KeyValuePair<SheetInfo, IEnumerable<TItem>> sheetItem)
+        private void ProcessExcelSheet(Exporter<TItem> exporter, XLWorkbook workbook, KeyValuePair<SheetInfo, IEnumerable<TItem>> sheetItem, int sheetIndex)
         {
-            var worksheet = workbook.Worksheets.Add(sheetItem.Key.Name);
 
+            IXLWorksheet worksheet = null;
+            if (workbook.Worksheets.Count <= sheetIndex)
+            {
+                worksheet = workbook.Worksheets.Add(sheetItem.Key.Name);
+            }
+            else
+            {
+                worksheet = workbook.Worksheets.ElementAt(sheetIndex);
+            }
 
             var initRow = 1;
 
@@ -69,10 +98,10 @@ namespace IntNovAction.Utils.FormatExporters
 
             var finalRow = initRow + sheetItem.Value.Count();
 
-            for (var row = initRow; row <= finalRow; row++)
+            for (var row = initRow; row < finalRow; row++)
             {
-                
-                var rowDataItem = sheetItem.Value.ElementAt(row - 1);
+
+                var rowDataItem = sheetItem.Value.ElementAt(row - initRow);
 
                 for (var column = 1; column <= _classPropInfo.Count; column++)
                 {

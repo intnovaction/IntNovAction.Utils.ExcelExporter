@@ -3,6 +3,7 @@ using IntNovAction.Utils.ExcelExporter.Utils;
 using IntNovAction.Utils.FormatExporters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace IntNovAction.Utils.ExcelExporter
         private Type itemType;
         internal bool _jumpHeaders;
 
+        internal Stream _existingFileStream;
+
         public Exporter()
         {
             itemType = typeof(ListItem);
@@ -34,6 +37,13 @@ namespace IntNovAction.Utils.ExcelExporter
             _fontFormatters = new List<Tuple<Func<ListItem, bool>, FontFormat>>();
             _fontSizeFormatters = new List<Tuple<Func<ListItem, bool>, int>>();
         }
+
+        public Exporter(Stream existingFileStream) : this()
+        {
+            _existingFileStream = existingFileStream;
+        }
+
+
         /// <summary>
         /// Añade un formato condicional a una celda
         /// </summary>
