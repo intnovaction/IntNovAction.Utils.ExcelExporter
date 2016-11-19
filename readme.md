@@ -1,5 +1,7 @@
 #IntNovAction Utils
 
 Proyectos con utilidades sencillas para hacer cosas varias
+Welcome to the IntNovAction-Utils wiki!
 
-* **ExcelExporter** Exportar IEnumerables a Excel, aplicando sencillos formatos mediante expresiones lambda. Usando ClosedXml.
+* **[Excel Exporter (PoC)](./docs/ExcelExporter.md)**: Crea ficheros excel a partir de IEnumerables, permitiendo aplicar reglas de formato sencillas usando expresiones lambda.
+ 

@@ -7,6 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntNovAction.Utils.ExcelExp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntNovAction.Utils.ExcelExporter.Tests", "ExcelExporter.Tests\IntNovAction.Utils.ExcelExporter.Tests.csproj", "{CE658A96-50DE-4AC9-8E26-52EE80FF4183}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E24B9156-09BF-4F49-9E96-0B051CFD92A2}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{4C705385-53F1-4FE5-BA75-04E41D208B16}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ExcelExporter.md = docs\ExcelExporter.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +34,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C705385-53F1-4FE5-BA75-04E41D208B16} = {E24B9156-09BF-4F49-9E96-0B051CFD92A2}
 	EndGlobalSection
 EndGlobal
