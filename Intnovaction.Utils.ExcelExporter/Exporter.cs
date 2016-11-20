@@ -1,6 +1,5 @@
-﻿
+﻿using IntNovAction.Utils.ExcelExporter.FormatExporters;
 using IntNovAction.Utils.ExcelExporter.Utils;
-using IntNovAction.Utils.FormatExporters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,29 +12,20 @@ namespace IntNovAction.Utils.ExcelExporter
     /// <summary>
     /// Genera un excel con los elementos de tipo ListItem como filas
     /// </summary>
-    /// <typeparam name="ListItem">El elemento que vamos a crear</typeparam>
-    public class Exporter<ListItem>
-        where ListItem : new()
+    public class Exporter     
     {
 
-        internal SheetCollection<ListItem> _data;
-        internal List<Tuple<Func<ListItem, bool>, FontFormat>> _fontFormatters;
-        internal List<Tuple<Func<ListItem, bool>, int>> _fontSizeFormatters;
+        internal SheetCollection _sheets;
 
-        internal bool _hideHeaders = false;
-        private string _title;
-        private Type itemType;
-        internal bool _jumpHeaders;
+        
 
         internal Stream _existingFileStream;
 
         public Exporter()
         {
-            itemType = typeof(ListItem);
-            _data = new SheetCollection<ListItem>();
 
-            _fontFormatters = new List<Tuple<Func<ListItem, bool>, FontFormat>>();
-            _fontSizeFormatters = new List<Tuple<Func<ListItem, bool>, int>>();
+            _sheets = new SheetCollection();
+           
         }
 
         public Exporter(Stream existingFileStream) : this()
@@ -44,76 +34,41 @@ namespace IntNovAction.Utils.ExcelExporter
         }
 
 
-        /// <summary>
-        /// Añade un formato condicional a una celda
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public Exporter<ListItem> AddFormat(Func<ListItem, bool> condition, FontFormat format)
-        {
-            _fontFormatters.Add(new Tuple<Func<ListItem, bool>, FontFormat>(condition, format));
-            return this;
-        }
-
-        /// <summary>
-        /// Añade un formato condicional a una celda
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public Exporter<ListItem> AddFormat(Func<ListItem, bool> condition, int size)
-        {
-            _fontSizeFormatters.Add(new Tuple<Func<ListItem, bool>, int>(condition, size));
-            return this;
-        }
+        
 
         public byte[] Export()
         {
+            
             var excelExporter = GetFormatter();
 
             var elems = excelExporter.Export(this);
 
             return elems;
+            
         }
+
+        private ExcelGenerator GetFormatter()
+        {
+            return new ExcelGenerator();
+        }
+
 
         /// <summary>
-        /// Indica que no se muestren los headers
+        /// Añade una hoja al excel
         /// </summary>
+        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
+        /// <param name="config">Configurador de la hoja</param>
         /// <returns></returns>
-        public Exporter<ListItem> HideHeaders()
+        public Exporter AddSheet<TDataItem>(Action<SheetConfigurator<TDataItem>> config)
+            where TDataItem : new()
         {
-            _hideHeaders = true;
+            var configurator = new SheetConfigurator<TDataItem>();
+            config.Invoke(configurator);
+
+            this._sheets.Add(configurator);
+
             return this;
         }
-
-        public Exporter<ListItem> JumpHeaders()
-        {
-            _jumpHeaders = true;
-            return this;
-        }
-
-
-        public Exporter<ListItem> SetData(IEnumerable<ListItem> data)
-        {
-            _data.Add(data);
-            return this;
-        }
-
-        public Exporter<ListItem> SetData(string name, IEnumerable<ListItem> data)
-        {
-            _data.Add(name, data);
-            return this;
-        }
-        public Exporter<ListItem> SetTitle(string title)
-        {
-
-            _title = title;
-            return this;
-        }
-        BaseExporter<ListItem> GetFormatter()
-        {
-            return new Excel<ListItem>();
-        }
-
 
     }
 

@@ -57,13 +57,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormatExporters\BaseExporter.cs" />
-    <Compile Include="FormatExporters\Excel.cs" />
+    <Compile Include="Exceptions\DuplicatedSheetNameException.cs" />
+    <Compile Include="FormatExporters\ExcelGenerator.cs" />
+    <Compile Include="FormatExporters\ExcelSheetGenerator.cs" />
     <Compile Include="Exporter.cs" />
+    <Compile Include="FormatExporters\PropInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\FontFormat.cs" />
     <Compile Include="Utils\SheetCollection.cs" />
-    <Compile Include="Utils\SheetInfo.cs" />
+    <Compile Include="Utils\SheetConfigurator.cs" />
+    <Compile Include="Utils\SheetConfiguratorBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IntNovAction.Utils.ExcelExporter.nuspec" />

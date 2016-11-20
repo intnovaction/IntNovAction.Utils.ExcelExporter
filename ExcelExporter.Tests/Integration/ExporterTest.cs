@@ -7,47 +7,52 @@ using ClosedXML.Excel;
 using System.IO;
 using FluentAssertions;
 using System.Reflection;
+using IntNovAction.Utils.ExcelExporter.Tests;
 
-namespace ExcelExporter.Tests
+namespace ExcelExporter.Tests.Integration
 {
     [TestClass]
     public class ExporterTest
     {
         [TestMethod]
-        [TestCategory("ExcelExporter")]
+        [TestCategory(Categories.Integration)]
         public void TestAddData()
         {
 
-            var exporter = new Exporter<TestListItem>();
+            var exporter = new Exporter();
+
 
             var items = GenerateItems(3);
-            exporter.SetData(items);
 
-            var item2 = GenerateItems(3);
-            exporter.SetData(item2);
 
+            exporter.AddSheet<TestListItem>(c =>
+                c.SetData(items).Name("Hoja 1")
+            );
 
         }
 
 
         [TestMethod]
-        [TestCategory("ExcelExporter")]
-        public void TestAddDataNamedSheet()
+        [TestCategory(Categories.Integration)]
+        public void TestMultipleDataSheet()
         {
 
-            var exporter = new Exporter<TestListItem>();
+            
 
             var items = GenerateItems(3);
-            exporter.SetData("1-Sheet", items);
+            var items2 = GenerateItems(3);
 
-            var item2 = GenerateItems(3);
-            exporter.SetData(item2);
+            var exporter = new Exporter()
+                .AddSheet<TestListItem>(c => c.SetData(items).Name("Hoja 1"))
+                .AddSheet<TestListItem>(c => c.SetData(items2).Name("Hoja 2"));
+
+
 
 
         }
 
         [TestMethod]
-        [TestCategory("ExcelExporter")]
+        [TestCategory(Categories.Integration)]
         public void TestExport()
         {
 
@@ -55,11 +60,16 @@ namespace ExcelExporter.Tests
             var sheetTitle = "1-Sheet";
             var items = GenerateItems(3);
 
-            var exporter = new Exporter<TestListItem>()
-                .SetData(sheetTitle, items)
-                .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
-                .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
-                .AddFormat(p => p.PropC == 1, 20);
+            var exporter = new Exporter()
+                .AddSheet<TestListItem>(c =>
+                    c.SetData(items)
+                    .Name(sheetTitle)
+                    .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
+                    .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
+                    .AddFormat(p => p.PropC == 1, 20)                    
+                    );
+
+
 
 
             var result = exporter.Export();
@@ -81,23 +91,26 @@ namespace ExcelExporter.Tests
         }
 
         [TestMethod]
-        [TestCategory("ExcelExporter")]
+        [TestCategory(Categories.Integration)]
         public void TestUseExistingExcel()
         {
             var items = GenerateItems(3);
 
             var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporter.Tests.Test.xlsx");
 
-            var exporter = new Exporter<TestListItem>(excelFileStream)
-                .SetData(items)
-                .JumpHeaders()
-                .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
-                .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
-                .AddFormat(p => p.PropC == 1, 20);
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(c =>
+                   c.SetData(items)
+                   .Name(sheetName)
+                   .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
+                   .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
+                   .AddFormat(p => p.PropC == 1, 20)
+                   );
 
             var result = exporter.Export();
-
-            //System.IO.File.WriteAllBytes(@"d:\pp.xlsx", result);
+            
 
             using (var stream = new MemoryStream(result))
             {
@@ -108,7 +121,7 @@ namespace ExcelExporter.Tests
 
                 firstSheet.Name
                     .Should()
-                    .Be("Hoja1", "el nombre de la hoja 1 en el excel de ejemplo es Hoja 1");
+                    .Be(sheetName, "el nombre de la hoja 1 en el excel de ejemplo es Hoja 1");
 
                 firstSheet.LastRowUsed().RowNumber()
                     .Should().Be(items.Count + 1, $"el excel de ejemplo tiene cabecera y hay {items.Count} datos");
@@ -120,10 +133,10 @@ namespace ExcelExporter.Tests
         private List<TestListItem> GenerateItems(int numItems)
         {
 
-            var result = new List<TestListItem>();
+            var dataToExport = new List<TestListItem>();
             for (int i = 0; i < numItems; i++)
             {
-                result.Add(new TestListItem()
+                dataToExport.Add(new TestListItem()
                 {
                     PropA = $"PropA - {i}",
                     PropB = $"PropB - {i}",
@@ -131,7 +144,7 @@ namespace ExcelExporter.Tests
                 });
             }
 
-            return result;
+            return dataToExport;
         }
     }
 }
