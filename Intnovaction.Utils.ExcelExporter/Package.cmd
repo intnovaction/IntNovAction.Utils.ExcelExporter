@@ -1,1 +1,1 @@
-..\utils\nuget.exe pack .\IntNovAction.Utils.ExcelExporter.csproj
+..\utils\nuget.exe pack .\IntNovAction.Utils.ExcelExporter.csproj -Verbosity Detailed -Prop Platform=AnyCPU -Verbosity Detailed
