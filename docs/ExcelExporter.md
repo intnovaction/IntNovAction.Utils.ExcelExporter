@@ -36,7 +36,7 @@ Configuramos el excel, creando una hoja, con un nombre y un formato condicional 
 
     var exporter = new Exporter()
 		.AddSheet<TestListItem>(c =>
-			c.SetData(items)
+			c.SetData(dataToExport)
 			  .Name("Sheet Name")
 			  .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
 		);
