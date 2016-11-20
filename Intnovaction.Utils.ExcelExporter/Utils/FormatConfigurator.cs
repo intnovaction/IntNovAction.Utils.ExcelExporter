@@ -1,5 +1,9 @@
 ﻿namespace IntNovAction.Utils.ExcelExporter.Utils
 {
+
+    /// <summary>
+    /// Configura un formato para un rango de celdas
+    /// </summary>
     public class FormatConfigurator
     {
         internal bool _bold = false;

@@ -13,11 +13,18 @@ namespace IntNovAction.Utils.ExcelExporter
         internal Stream _existingFileStream;
         internal SheetCollection _sheets;
 
+        /// <summary>
+        /// Constructor para la creación de una nueva hoja excel
+        /// </summary>
         public Exporter()
         {
             _sheets = new SheetCollection();
         }
 
+        /// <summary>
+        /// Constructor para trabajar sobre un excel existente
+        /// </summary>
+        /// <param name="existingFileStream">Stream con el contenido del excel sobre el que se va a trabajar</param>
         public Exporter(Stream existingFileStream) : this()
         {
             _existingFileStream = existingFileStream;
@@ -27,8 +34,8 @@ namespace IntNovAction.Utils.ExcelExporter
         /// Añade una hoja al excel
         /// </summary>
         /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
-        /// <param name="config">Configurador de la hoja</param>
-        /// <returns></returns>
+        /// <param name="config">Expresioón para trabajar con el configurador de la hoja</param>
+        /// <returns>Exportador</returns>
         public Exporter AddSheet<TDataItem>(Action<SheetConfigurator<TDataItem>> config)
             where TDataItem : new()
         {
@@ -40,6 +47,10 @@ namespace IntNovAction.Utils.ExcelExporter
             return this;
         }
 
+        /// <summary>
+        /// Devuelve el array de bytes con el contenido del excel configurado
+        /// </summary>
+        /// <returns></returns>
         public byte[] Export()
         {
             var excelExporter = GetFormatter();

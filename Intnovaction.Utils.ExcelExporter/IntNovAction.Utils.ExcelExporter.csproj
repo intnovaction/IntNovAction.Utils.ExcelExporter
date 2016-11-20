@@ -63,7 +63,6 @@
     <Compile Include="Exporter.cs" />
     <Compile Include="FormatExporters\PropInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\FontFormat.cs" />
     <Compile Include="Utils\FormatConfigurator.cs" />
     <Compile Include="Utils\SheetCollection.cs" />
     <Compile Include="Utils\SheetConfigurator.cs" />
