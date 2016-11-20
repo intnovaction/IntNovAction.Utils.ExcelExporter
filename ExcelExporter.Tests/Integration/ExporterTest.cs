@@ -1,13 +1,13 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
-using IntNovAction.Utils.ExcelExporter;
-using System.Collections.Generic;
-using ClosedXML.Excel;
-using System.IO;
+﻿using ClosedXML.Excel;
 using FluentAssertions;
-using System.Reflection;
+using IntNovAction.Utils.ExcelExporter;
 using IntNovAction.Utils.ExcelExporter.Tests;
+using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace ExcelExporter.Tests.Integration
 {
@@ -18,62 +18,27 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Integration)]
         public void TestAddData()
         {
-
             var exporter = new Exporter();
 
-
             var items = GenerateItems(3);
-
 
             exporter.AddSheet<TestListItem>(c =>
                 c.SetData(items).Name("Hoja 1")
             );
-
-        }
-
-
-        [TestMethod]
-        [TestCategory(Categories.Integration)]
-        public void TestMultipleDataSheet()
-        {
-
-            
-
-            var items = GenerateItems(3);
-            var items2 = GenerateItems(3);
-
-            var exporter = new Exporter()
-                .AddSheet<TestListItem>(c => c.SetData(items).Name("Hoja 1"))
-                .AddSheet<TestListItem>(c => c.SetData(items2).Name("Hoja 2"));
-
-
-
-
         }
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
         public void TestExport()
         {
-
-
             var sheetTitle = "1-Sheet";
             var items = GenerateItems(3);
 
             var exporter = new Exporter()
                 .AddSheet<TestListItem>(c =>
-                    c.SetData(items)
-                    .Name(sheetTitle)
-                    .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
-                    .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
-                    .AddFormat(p => p.PropC == 1, 20)                    
-                    );
-
-
-
+                    c.SetData(items).Name(sheetTitle));
 
             var result = exporter.Export();
-
 
             using (var stream = new MemoryStream(result))
             {
@@ -85,9 +50,49 @@ namespace ExcelExporter.Tests.Integration
 
                 firstSheet.LastRowUsed().RowNumber()
                     .Should().Be(items.Count + 1, $"Hay {items.Count} datos y una mas de cabecera");
-
             }
+        }
 
+        [TestMethod]
+        [TestCategory(Categories.Integration)]
+        public void TestExportWithFormat()
+        {
+            var sheetTitle = "1-Sheet";
+            var items = GenerateItems(1);
+
+            var exporter = new Exporter()
+                .AddSheet<TestListItem>(c =>
+                    c.SetData(items).Name(sheetTitle)
+                        .AddFormatRule(p => p.PropA == items.First().PropA, f => f.Bold().Italic()));
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.LastRowUsed().RowNumber()
+                    .Should().Be(items.Count + 1, $"Hay {items.Count} datos y una mas de cabecera");
+
+                firstSheet.Cell(2, 1).Style.Font.Bold.Should().BeTrue();
+                firstSheet.Cell(2, 1).Style.Font.Italic.Should().BeTrue();
+                firstSheet.Cell(2, 1).Style.Font.Underline.Should().Be(XLFontUnderlineValues.None);
+            }
+        }
+
+
+        [TestMethod]
+        [TestCategory(Categories.Integration)]
+        public void TestMultipleDataSheet()
+        {
+            var items = GenerateItems(3);
+            var items2 = GenerateItems(3);
+
+            var exporter = new Exporter()
+                .AddSheet<TestListItem>(c => c.SetData(items).Name("Hoja 1"))
+                .AddSheet<TestListItem>(c => c.SetData(items2).Name("Hoja 2"));
         }
 
         [TestMethod]
@@ -101,16 +106,9 @@ namespace ExcelExporter.Tests.Integration
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
-               .AddSheet<TestListItem>(c =>
-                   c.SetData(items)
-                   .Name(sheetName)
-                   .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
-                   .AddFormat(p => p.PropC == 2, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Italic)
-                   .AddFormat(p => p.PropC == 1, 20)
-                   );
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName));
 
             var result = exporter.Export();
-            
 
             using (var stream = new MemoryStream(result))
             {
@@ -126,13 +124,10 @@ namespace ExcelExporter.Tests.Integration
                 firstSheet.LastRowUsed().RowNumber()
                     .Should().Be(items.Count + 1, $"el excel de ejemplo tiene cabecera y hay {items.Count} datos");
             }
-
         }
-
 
         private List<TestListItem> GenerateItems(int numItems)
         {
-
             var dataToExport = new List<TestListItem>();
             for (int i = 0; i < numItems; i++)
             {

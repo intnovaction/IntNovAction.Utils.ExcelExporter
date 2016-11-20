@@ -1,9 +1,5 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
 {
@@ -11,24 +7,52 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     /// Contiene los datos de una hoja
     /// </summary>
     public class SheetConfigurator<TDataItem> : SheetConfiguratorBase
-        where TDataItem: new()
+        where TDataItem : new()
     {
+        internal IEnumerable<TDataItem> _data;
+
+        internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _fontFormatters;
+
+        internal bool _hideHeaders = false;
 
         public SheetConfigurator()
         {
-            _fontFormatters = new List<Tuple<Func<TDataItem, bool>, FontFormat>>();
-            _fontSizeFormatters = new List<Tuple<Func<TDataItem, bool>, int>>();
+            _fontFormatters = new List<Tuple<Func<TDataItem, bool>, FormatConfigurator>>();
+            //_fontSizeFormatters = new List<Tuple<Func<TDataItem, bool>, int>>();
         }
 
-        internal bool _hideHeaders = false;
-       
+        /// <summary>
+        /// Añade un formato condicional de fila a una hoja
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> AddFormatRule(Func<TDataItem, bool> condition, Action<FormatConfigurator> formatConfigurator)
+        {
+            var configurator = new FormatConfigurator();
+            formatConfigurator.Invoke(configurator);
 
-        internal List<Tuple<Func<TDataItem, bool>, FontFormat>> _fontFormatters;
+            _fontFormatters.Add(new Tuple<Func<TDataItem, bool>, FormatConfigurator>(condition, configurator));
 
-        internal List<Tuple<Func<TDataItem, bool>, int>> _fontSizeFormatters;
+            return this;
+        }
 
-        internal IEnumerable<TDataItem> _data;
+        /// <summary>
+        /// Indica que no se muestren los headers
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> HideHeaders()
+        {
+            _hideHeaders = true;
+            return this;
+        }
 
+        public SheetConfigurator<TDataItem> JumpHeaders()
+        {
+            _jumpHeaders = true;
+            return this;
+        }
+
+        //internal List<Tuple<Func<TDataItem, bool>, int>> _fontSizeFormatters;
         public SheetConfigurator<TDataItem> Name(string name)
         {
             _name = name;
@@ -47,54 +71,10 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
-
-        /// <summary>
-        /// Añade un formato condicional a una celda
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> AddFormat(Func<TDataItem, bool> condition, FontFormat format)
-        {
-            _fontFormatters.Add(new Tuple<Func<TDataItem, bool>, FontFormat>(condition, format));
-            return this;
-        }
-
-        /// <summary>
-        /// Añade un formato condicional a una celda
-        /// </summary>
-        /// <param name="condition"></param>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> AddFormat(Func<TDataItem, bool> condition, int size)
-        {
-            _fontSizeFormatters.Add(new Tuple<Func<TDataItem, bool>, int>(condition, size));
-            return this;
-        }
-
-
-        /// <summary>
-        /// Indica que no se muestren los headers
-        /// </summary>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> HideHeaders()
-        {
-            _hideHeaders = true;
-            return this;
-        }
-
-        public SheetConfigurator<TDataItem> JumpHeaders()
-        {
-            _jumpHeaders = true;
-            return this;
-        }
-
-
         public SheetConfigurator<TDataItem> SetTitle(string title)
         {
             _title = title;
             return this;
         }
-
-
-
     }
 }

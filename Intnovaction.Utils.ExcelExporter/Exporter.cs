@@ -1,57 +1,27 @@
 ﻿using IntNovAction.Utils.ExcelExporter.FormatExporters;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter
 {
     /// <summary>
     /// Genera un excel con los elementos de tipo ListItem como filas
     /// </summary>
-    public class Exporter     
+    public class Exporter
     {
-
-        internal SheetCollection _sheets;
-
-        
-
         internal Stream _existingFileStream;
+        internal SheetCollection _sheets;
 
         public Exporter()
         {
-
             _sheets = new SheetCollection();
-           
         }
 
         public Exporter(Stream existingFileStream) : this()
         {
             _existingFileStream = existingFileStream;
         }
-
-
-        
-
-        public byte[] Export()
-        {
-            
-            var excelExporter = GetFormatter();
-
-            var elems = excelExporter.Export(this);
-
-            return elems;
-            
-        }
-
-        private ExcelGenerator GetFormatter()
-        {
-            return new ExcelGenerator();
-        }
-
 
         /// <summary>
         /// Añade una hoja al excel
@@ -70,7 +40,18 @@ namespace IntNovAction.Utils.ExcelExporter
             return this;
         }
 
+        public byte[] Export()
+        {
+            var excelExporter = GetFormatter();
+
+            var elems = excelExporter.Export(this);
+
+            return elems;
+        }
+
+        private ExcelGenerator GetFormatter()
+        {
+            return new ExcelGenerator();
+        }
     }
-
-
 }

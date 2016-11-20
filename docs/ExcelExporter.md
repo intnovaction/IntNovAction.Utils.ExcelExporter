@@ -35,10 +35,9 @@ Creamos un IEnumerable con items de esa clase...
 Configuramos el excel, creando una hoja, con un nombre y un formato condicional en base a los valores de PropC de cada item.
 
     var exporter = new Exporter()
-		.AddSheet<TestListItem>(c =>
-			c.SetData(items)
-			  .Name("Sheet Name")
-			  .AddFormat(p => p.PropC == 3, IntNovAction.Utils.ExcelExporter.Utils.FontFormat.Bold)
+		.AddSheet<TestListItem>(c => c.SetData(items)
+		  .Name("Sheet Name")
+		  .AddFormatRule(p => p.PropC == 3, format => format.Bold())
 		);
 
 Por ultimo exportamos el excel

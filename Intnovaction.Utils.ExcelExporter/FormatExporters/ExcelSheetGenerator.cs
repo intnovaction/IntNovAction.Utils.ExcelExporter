@@ -1,14 +1,10 @@
 ﻿using ClosedXML.Excel;
-using IntNovAction.Utils.ExcelExporter;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.FormatExporters
 {
@@ -17,16 +13,12 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
     {
         public ExcelSheetGenerator() : base()
         {
-
         }
 
-
         public void WriteSheet(XLWorkbook workbook, SheetConfigurator<TDataItem> sheetConfig)
-           
+
         {
             var _classPropInfo = ReadClassInfo();
-
-
 
             IXLWorksheet worksheet = null;
             if (workbook.Worksheets.Count <= sheetConfig._order)
@@ -40,11 +32,9 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
 
             var initRow = 1;
 
-
             // Formato de la cabecera (si es necesario)
             if (!sheetConfig._hideHeaders)
             {
-
                 for (var column = 1; column <= _classPropInfo.Count; column++)
                 {
                     var columnToDisplay = _classPropInfo[column - 1];
@@ -59,12 +49,10 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                 initRow++;
             }
 
-
             var finalRow = initRow + sheetConfig._data.Count();
 
             for (var row = initRow; row < finalRow; row++)
             {
-
                 var rowDataItem = sheetConfig._data.ElementAt(row - initRow);
 
                 for (var column = 1; column <= _classPropInfo.Count; column++)
@@ -76,60 +64,44 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                 }
 
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);
+            }
+        }
 
+        private void ApplyFormat(IXLRangeBase range, FormatConfigurator configurator)
+        {
+            if (configurator._bold)
+            {
+                range.Style.Font.Bold = true;
+            }
+            if (configurator._underline)
+            {
+                range.Style.Font.Underline = XLFontUnderlineValues.Single;
+            }
+            if (configurator._italic)
+            {
+                range.Style.Font.Italic = true;
+            }
+
+            if (configurator._fontSize.HasValue)
+            {
+                range.Style.Font.FontSize = configurator._fontSize.Value;
             }
         }
 
         private void FormatRow(IXLRow excelRow, TDataItem data, SheetConfigurator<TDataItem> configurator)
         {
-            FormatFontStyle(excelRow, data, configurator);
-            FormatFontSize(excelRow, data, configurator);
-        }
-
-        private void FormatFontSize(IXLRow excelRow, TDataItem data, SheetConfigurator<TDataItem> configurator)
-        {
-            foreach (var filter in configurator._fontSizeFormatters)
-            {
-                if (filter.Item1(data))
-                {
-                    excelRow.Style.Font.FontSize = filter.Item2;
-                }
-            }
-        }
-
-        private void FormatFontStyle(IXLRow excelRow, TDataItem data, SheetConfigurator<TDataItem> configurator)
-        {
             foreach (var filter in configurator._fontFormatters)
             {
                 if (filter.Item1(data))
                 {
-                    switch (filter.Item2)
-                    {
-                        case FontFormat.Bold:
-                            {
-                                excelRow.Style.Font.Bold = true;
-                                break;
-                            }
-                        case FontFormat.Italic:
-                            {
-                                excelRow.Style.Font.Italic = true;
-                                break;
-                            }
-                        case FontFormat.Underline:
-                            {
-                                excelRow.Style.Font.Underline = XLFontUnderlineValues.Single;
-                                break;
-                            }
-                    }
+                    ApplyFormat(excelRow, filter.Item2);
                 }
             }
         }
 
-        
-        List<PropInfo> ReadClassInfo()
+        private List<PropInfo> ReadClassInfo()
         {
             var type = typeof(TDataItem);
-
 
             var result = new List<PropInfo>();
 
@@ -161,12 +133,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
             // Ordenamos
             result = result.OrderBy(p => p.Order).ThenBy(p => p.DisplayName).ToList();
 
-
             return result;
         }
-
-
-
-       
     }
 }

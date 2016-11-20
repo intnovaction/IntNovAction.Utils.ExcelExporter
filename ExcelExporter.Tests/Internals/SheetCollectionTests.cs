@@ -1,9 +1,9 @@
-﻿using System;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using IntNovAction.Utils.ExcelExporter.Utils;
-using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
+﻿using FluentAssertions;
 using IntNovAction.Utils.ExcelExporter.Exceptions;
+using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
+using IntNovAction.Utils.ExcelExporter.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace IntNovAction.Utils.ExcelExporter.Tests.Internals
 {
@@ -31,7 +31,5 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Internals
             action.ShouldThrow<DuplicatedSheetNameException>()
                 .Where(p => p.DuplicatedName == name);
         }
-
-
     }
 }

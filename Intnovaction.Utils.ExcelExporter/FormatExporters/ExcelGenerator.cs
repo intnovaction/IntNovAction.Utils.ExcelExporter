@@ -9,7 +9,6 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
     {
         public byte[] Export(Exporter exporter)
         {
-
             XLWorkbook workbook = null;
 
             try
@@ -34,7 +33,6 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                     var newType = typeof(ExcelSheetGenerator<>);
                     var genericType = newType.MakeGenericType(itemType);
 
-
                     var sheetExporter = Activator.CreateInstance(genericType);
 
                     genericType.InvokeMember("WriteSheet",
@@ -50,7 +48,6 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                     workbook.SaveAs(ms);
                     return ms.ToArray();
                 }
-
             }
             finally
             {
