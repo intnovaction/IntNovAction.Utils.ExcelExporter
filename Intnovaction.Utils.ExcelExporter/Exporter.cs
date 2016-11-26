@@ -42,7 +42,9 @@ namespace IntNovAction.Utils.ExcelExporter
             var configurator = new SheetConfigurator<TDataItem>();
             config.Invoke(configurator);
 
+            configurator._order = this._sheets.Count;
             this._sheets.Add(configurator);
+
 
             return this;
         }

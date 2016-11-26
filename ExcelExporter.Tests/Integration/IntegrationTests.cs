@@ -87,12 +87,35 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Integration)]
         public void MultipleDataSheet()
         {
-            var items = GenerateItems(3);
-            var items2 = GenerateItems(3);
+            var sheet1Name = "Hoja 1";
+            var sheet2Name = "Hoja 2";
+            var sheet1Rows = 2;
+            var sheet2Rows = 3;
+
+            var items = GenerateItems(sheet1Rows);
+            var items2 = GenerateItems(sheet2Rows);
 
             var exporter = new Exporter()
-                .AddSheet<TestListItem>(c => c.SetData(items).Name("Hoja 1"))
-                .AddSheet<TestListItem>(c => c.SetData(items2).Name("Hoja 2"));
+                .AddSheet<TestListItem>(c => c.SetData(items).Name(sheet1Name))
+                .AddSheet<TestListItem>(c => c.SetData(items2).Name(sheet2Name));
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+
+                var workbook = new XLWorkbook(stream);
+
+                workbook.Worksheets.Count.Should().Be(2);
+
+                workbook.Worksheets.Worksheet(1).Name.Should().Be(sheet1Name);
+                workbook.Worksheets.Worksheet(1).LastRowUsed().RowNumber().Should().Be(sheet1Rows + 1);
+
+
+                workbook.Worksheets.Worksheet(2).Name.Should().Be(sheet2Name);
+                workbook.Worksheets.Worksheet(2).LastRowUsed().RowNumber().Should().Be(sheet2Rows + 1);
+
+            }
         }
 
         [TestMethod]
@@ -102,8 +125,6 @@ namespace ExcelExporter.Tests.Integration
             var items = GenerateItems(3);
 
             var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporter.Tests.Test.xlsx");
-
-           
 
             var exporter = new Exporter(excelFileStream)
                .AddSheet<TestListItem>(c => c.SetData(items));
@@ -133,7 +154,7 @@ namespace ExcelExporter.Tests.Integration
         public void SetCoordinates()
         {
             var items = GenerateItems(3);
-            
+
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
@@ -154,14 +175,14 @@ namespace ExcelExporter.Tests.Integration
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void HideHeaders()
+        public void HideColumnHeaders()
         {
             var items = GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideHeaders());
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideColumnHeaders());
 
             var result = exporter.Export();
 
@@ -172,7 +193,7 @@ namespace ExcelExporter.Tests.Integration
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count);
-                
+
             }
         }
 
@@ -185,7 +206,7 @@ namespace ExcelExporter.Tests.Integration
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideHeaders()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideColumnHeaders()
                 .AddFormatRule(p => p.PropC == 0, f => f.Bold().Italic().Underline().Color(255, 0, 0))
                );
 
@@ -217,7 +238,7 @@ namespace ExcelExporter.Tests.Integration
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideHeaders()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideColumnHeaders()
                 .AddFormatRule(p => p.PropC == 0, f => f.Bold().Italic().Underline().Color(255, 0, 0))
                );
 
@@ -238,6 +259,84 @@ namespace ExcelExporter.Tests.Integration
                 cellA2.Style.Font.FontColor.Color.ToHex().Should().Be("FF000000");
             }
 
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.Title)]
+        public void ShowTitleText_Default()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+            
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).Title());
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Cell(1, 1).Value.Should().Be(sheetName);
+                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
+            }
+        }
+
+
+        [TestMethod]
+        [TestCategory(Categories.Title)]
+        public void ShowTitleText_ExplicitTitle()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+            var sheetTitle = "Title";
+
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).Title(h => h.Text(sheetTitle)));
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Cell(1, 1).Value.Should().Be(sheetTitle);
+                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.Title)]
+        public void ShowTitleText_Format()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+            
+
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName)
+                .Title(t => t.Format(f => f.Bold()))
+                );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+                
+                firstSheet.Cell(1, 1).Style.Font.Bold.Should().Be(true);
+                firstSheet.Cell(2, 1).Style.Font.Bold.Should().Be(false);
+                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
+            }
         }
 
         private List<TestListItem> GenerateItems(int numItems)

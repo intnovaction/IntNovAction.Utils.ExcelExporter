@@ -62,7 +62,7 @@ Para no pintar en la tabla los nombres de las columnas y que empiecen los datos 
 
 ```c#
     var exporter = new Exporter()
-		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name").HideHeaders());
+		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name").HideColumnHeaders());
         
 ```
 
@@ -93,4 +93,24 @@ Si el valor de PropC es 3, entonces haz la fila en negrita y cursiva:
 		  .Name("Sheet Name")
 		  .AddFormatRule(p => p.PropC == 3, format => format.Bold().Italic())
 		);
+```
+
+##Establecer un titulo en la hoja##
+
+Podemos establecer un titulo por defecto en la parte superior
+
+```c#
+    var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+            .Title()
+    );
+```
+
+O personalizarlo con un texto, formato, etc.
+
+```c#
+    var exporter = new Exporter()
+	.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+            .Title(t => t.Text("Title Text").Format(f => f.Bold()))
+    );
 ```

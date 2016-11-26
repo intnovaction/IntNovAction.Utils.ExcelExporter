@@ -13,10 +13,9 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
         internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _fontFormatters;
 
-        internal bool _hideHeaders = false;
+        internal bool _hideColumnHeaders = false;
 
-     
-
+       
 
         public SheetConfigurator()
         {
@@ -58,12 +57,12 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         }
 
         /// <summary>
-        /// Indica que no se muestren los headers
+        /// Indica que no se muestren los headers de las columnas
         /// </summary>
         /// <returns></returns>
-        public SheetConfigurator<TDataItem> HideHeaders()
+        public SheetConfigurator<TDataItem> HideColumnHeaders()
         {
-            _hideHeaders = true;
+            _hideColumnHeaders = true;
             return this;
         }
 
@@ -102,15 +101,40 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
+        
+
+
         /// <summary>
-        /// Establece el titulo de la hoja
+        /// Establece la cabecera de la hoja
         /// </summary>
-        /// <param name="title">El titulo a poner</param>
-        /// <remarks>Todavia no funciona</remarks>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> SetTitle(string title)
+        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
+        /// <param name="config">Expresioón para trabajar con el configurador de la cabecera</param>
+        /// <returns>Exportador</returns>
+        public SheetConfigurator<TDataItem> Title(Action<TitleConfigurator> config)            
         {
-            _title = title;
+            var configurator = new TitleConfigurator();
+            configurator.Text(_name);
+
+            config.Invoke(configurator);
+
+            this._title = configurator;
+            
+
+            return this;
+        }
+
+        /// <summary>
+        /// Añade la cabecera por defecto a la hoja
+        /// </summary>
+        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
+        /// <returns>Exportador</returns>
+        public SheetConfigurator<TDataItem> Title()
+        {
+            var configurator = new TitleConfigurator();
+            
+            this._title = configurator;
+            _title.Text(_name);
+
             return this;
         }
     }

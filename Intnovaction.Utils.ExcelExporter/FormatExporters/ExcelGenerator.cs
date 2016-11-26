@@ -39,8 +39,6 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                         System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public,
                         Type.DefaultBinder, sheetExporter, new object[] { workbook, sheetConfigurator });
 
-                    //// Creamos el worksheet
-                    //sheetExporter.WriteSheet(workbook, sheetConfigurator);
                 }
 
                 using (var ms = new MemoryStream())

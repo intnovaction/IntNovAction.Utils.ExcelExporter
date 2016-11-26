@@ -21,7 +21,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
             var _classPropInfo = ReadClassInfo();
 
             IXLWorksheet worksheet = null;
-            if (workbook.Worksheets.Count <= sheetConfig._order)
+            if (workbook.Worksheets.Count < sheetConfig._order + 1)
             {
                 worksheet = workbook.Worksheets.Add(sheetConfig._name);
             }
@@ -32,10 +32,23 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
 
             var initRow = sheetConfig._initialRow;
 
-            // Formato de la cabecera (si es necesario)
-            if (!sheetConfig._hideHeaders)
+            if (sheetConfig._title != null)
             {
-                for (var column = sheetConfig._initialRow; column <= _classPropInfo.Count; column++)
+                var cell = worksheet.Cell(initRow, 1);
+                cell.SetValue(sheetConfig._title._TitleText);
+
+                if (sheetConfig._title._Format != null)
+                {
+                    ApplyFormat(cell.Style, sheetConfig._title._Format);
+                }
+
+                initRow++;
+            }
+
+            // Formato de la cabecera (si es necesario)
+            if (!sheetConfig._hideColumnHeaders)
+            {
+                for (var column = initRow; column <= _classPropInfo.Count; column++)
                 {
                     var columnToDisplay = _classPropInfo[column - 1];
                     var cell = worksheet.Cell(initRow, column);
@@ -44,7 +57,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
 
                 initRow++;
             }
-            
+
 
             var finalRow = initRow + sheetConfig._data.Count();
 
@@ -64,30 +77,32 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
             }
         }
 
-        private void ApplyFormat(IXLRangeBase range, FormatConfigurator configurator)
+
+
+        private static void ApplyFormat(IXLStyle style, FormatConfigurator configurator)
         {
             if (configurator._bold)
             {
-                range.Style.Font.Bold = true;
+                style.Font.Bold = true;
             }
             if (configurator._underline)
             {
-                range.Style.Font.Underline = XLFontUnderlineValues.Single;
+                style.Font.Underline = XLFontUnderlineValues.Single;
             }
             if (configurator._italic)
             {
-                range.Style.Font.Italic = true;
+                style.Font.Italic = true;
             }
 
             if (configurator._color != null)
             {
-                range.Style.Font.FontColor = XLColor.FromArgb(configurator._color.Red, configurator._color.Green, configurator._color.Blue);
+                style.Font.FontColor = XLColor.FromArgb(configurator._color.Red, configurator._color.Green, configurator._color.Blue);
             }
-             
+
 
             if (configurator._fontSize.HasValue)
             {
-                range.Style.Font.FontSize = configurator._fontSize.Value;
+                style.Font.FontSize = configurator._fontSize.Value;
             }
         }
 
@@ -97,7 +112,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
             {
                 if (filter.Item1(data))
                 {
-                    ApplyFormat(excelRow, filter.Item2);
+                    ApplyFormat(excelRow.Style, filter.Item2);
                 }
             }
         }
