@@ -35,14 +35,11 @@ Creamos un IEnumerable con items de esa clase...
     }
 ```
 
-Configuramos el excel, creando una hoja, con un nombre y un formato condicional en base a los valores de PropC de cada item.
+Configuramos el excel, creando una hoja, con un nombre.
 
 ```c#
     var exporter = new Exporter()
-		.AddSheet<TestListItem>(c => c.SetData(dataToExport)
-		  .Name("Sheet Name")
-		  .AddFormatRule(p => p.PropC == 3, format => format.Bold())
-		);
+		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name"));
 ```
 
 Por ultimo exportamos el excel
@@ -77,4 +74,23 @@ Podemos especificar que no se empiecen a pintar las filas en A1, sino donde quer
     var exporter = new Exporter()
 		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name").SetCoordinates(3, 2));
         
+```
+
+##Formatear las filas en base a los valores##
+
+Podemos establecer condiciones (reglas de formato a nivel de fila) en forma de expresiones, que apliquen formatos:
+- Bold
+- Italic
+- Underline
+- Color
+- FontSize
+
+Si el valor de PropC es 3, entonces haz la fila en negrita y cursiva:
+
+```c#
+    var exporter = new Exporter()
+		.AddSheet<TestListItem>(c => c.SetData(dataToExport)
+		  .Name("Sheet Name")
+		  .AddFormatRule(p => p.PropC == 3, format => format.Bold().Italic())
+		);
 ```
