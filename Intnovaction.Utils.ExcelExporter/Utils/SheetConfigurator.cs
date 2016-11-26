@@ -15,10 +15,12 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
         internal bool _hideHeaders = false;
 
+     
+
+
         public SheetConfigurator()
         {
             _fontFormatters = new List<Tuple<Func<TDataItem, bool>, FormatConfigurator>>();
-            //_fontSizeFormatters = new List<Tuple<Func<TDataItem, bool>, int>>();
         }
 
         /// <summary>
@@ -38,6 +40,24 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         }
 
         /// <summary>
+        /// Establece las coordenadas de donde empieza a pintar los datos
+        /// </summary>
+        /// <param name="initialRow"></param>
+        /// <param name="initialColumn"></param>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> SetCoordinates(int initialRow, int initialColumn)
+        {
+            if (initialRow < 1 || initialColumn < 1)
+            {
+                throw new ArgumentOutOfRangeException("The minimum coordinates are 1, 1");
+            }
+
+            _initialRow = initialRow;
+            _initialColumn = initialColumn;
+            return this;
+        }
+
+        /// <summary>
         /// Indica que no se muestren los headers
         /// </summary>
         /// <returns></returns>
@@ -47,15 +67,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
-        /// <summary>
-        /// Deja la fila de las cabeceras en blanco y empieza con los datos en la siguienteo
-        /// </summary>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> JumpHeaders()
-        {
-            _jumpHeaders = true;
-            return this;
-        }
+       
 
         /// <summary>
         /// Establece el nombre de la hoja

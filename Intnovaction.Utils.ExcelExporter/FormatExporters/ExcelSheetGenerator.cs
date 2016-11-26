@@ -30,12 +30,12 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                 worksheet = workbook.Worksheets.ElementAt(sheetConfig._order);
             }
 
-            var initRow = 1;
+            var initRow = sheetConfig._initialRow;
 
             // Formato de la cabecera (si es necesario)
             if (!sheetConfig._hideHeaders)
             {
-                for (var column = 1; column <= _classPropInfo.Count; column++)
+                for (var column = sheetConfig._initialRow; column <= _classPropInfo.Count; column++)
                 {
                     var columnToDisplay = _classPropInfo[column - 1];
                     var cell = worksheet.Cell(initRow, column);
@@ -44,10 +44,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
 
                 initRow++;
             }
-            else if (!sheetConfig._jumpHeaders)
-            {
-                initRow++;
-            }
+            
 
             var finalRow = initRow + sheetConfig._data.Count();
 

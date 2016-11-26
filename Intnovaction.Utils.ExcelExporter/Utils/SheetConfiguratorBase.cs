@@ -2,10 +2,18 @@
 {
     public abstract class SheetConfiguratorBase
     {
-        internal bool _jumpHeaders;
+
         internal string _title;
         internal string _name { get; set; }
 
+
         internal int _order { get; set; }
+
+        internal int _initialRow = 1;
+        internal int _initialColumn = 1;
+
+
+
+
     }
 }

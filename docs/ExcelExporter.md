@@ -7,7 +7,7 @@ Permite exportar un IEnumerable a una hoja excel. Aplicando formato a las filas 
 Puede generar las columnas del excel leyendo los valores del atributo Display (Name, Order...)
 
 Podemos generar una clase con los datos que vamos a mostrar
-
+```c#
     public class TestListItem
     {
         [Display(Name = "PropA Disp Name", Order = 2)]
@@ -18,9 +18,11 @@ Podemos generar una clase con los datos que vamos a mostrar
 
         public int PropC { get; set; }
     }
+```
 
 Creamos un IEnumerable con items de esa clase...
 
+````c#
     var dataToExport = new List<TestListItem>();
     for (int i = 0; i < 5; i++)
     {
@@ -31,15 +33,48 @@ Creamos un IEnumerable con items de esa clase...
             PropC = i,
         });
     }
+```
 
 Configuramos el excel, creando una hoja, con un nombre y un formato condicional en base a los valores de PropC de cada item.
 
+```c#
     var exporter = new Exporter()
 		.AddSheet<TestListItem>(c => c.SetData(dataToExport)
 		  .Name("Sheet Name")
 		  .AddFormatRule(p => p.PropC == 3, format => format.Bold())
 		);
+```
 
 Por ultimo exportamos el excel
 
     var result = exporter.Export();
+
+##Crear múltiples hojas##
+
+Para crear múltiples hojas con múltiples sets de datos llamamos varias veces a AddSheet:
+
+```c#
+    var exporter = new Exporter()
+		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name"))
+        .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet 2 Name"));
+```
+
+##No pintar la cabecera con los nombres de columnas de la tabla##
+
+Para no pintar en la tabla los nombres de las columnas y que empiecen los datos en la coordenadas iniciales.
+
+```c#
+    var exporter = new Exporter()
+		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name").HideHeaders());
+        
+```
+
+##Establecer coordenadas para pintar la tabla##
+
+Podemos especificar que no se empiecen a pintar las filas en A1, sino donde queramos
+
+```c#
+    var exporter = new Exporter()
+		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name").SetCoordinates(3, 2));
+        
+```

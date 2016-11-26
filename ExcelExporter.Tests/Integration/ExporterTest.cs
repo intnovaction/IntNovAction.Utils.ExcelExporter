@@ -16,7 +16,7 @@ namespace ExcelExporter.Tests.Integration
     {
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void TestAddData()
+        public void AddData()
         {
             var exporter = new Exporter();
 
@@ -29,7 +29,7 @@ namespace ExcelExporter.Tests.Integration
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void TestExport()
+        public void Export()
         {
             var sheetTitle = "1-Sheet";
             var items = GenerateItems(3);
@@ -55,7 +55,7 @@ namespace ExcelExporter.Tests.Integration
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void TestExportWithFormat()
+        public void ExportWithFormat()
         {
             var sheetTitle = "1-Sheet";
             var items = GenerateItems(1);
@@ -85,7 +85,7 @@ namespace ExcelExporter.Tests.Integration
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void TestMultipleDataSheet()
+        public void MultipleDataSheet()
         {
             var items = GenerateItems(3);
             var items2 = GenerateItems(3);
@@ -97,21 +97,23 @@ namespace ExcelExporter.Tests.Integration
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void TestUseExistingExcel()
+        public void UseExistingExcel()
         {
             var items = GenerateItems(3);
 
             var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporter.Tests.Test.xlsx");
 
-            var sheetName = "Hoja 1";
+           
 
-            var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName));
+            var exporter = new Exporter(excelFileStream)
+               .AddSheet<TestListItem>(c => c.SetData(items));
 
             var result = exporter.Export();
 
             using (var stream = new MemoryStream(result))
             {
+
+                var sheetName = "ExistingHoja1";
                 var workbook = new XLWorkbook(stream);
 
                 workbook.Worksheets.Count.Should().Be(1);
@@ -123,6 +125,54 @@ namespace ExcelExporter.Tests.Integration
 
                 firstSheet.LastRowUsed().RowNumber()
                     .Should().Be(items.Count + 1, $"el excel de ejemplo tiene cabecera y hay {items.Count} datos");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.Integration)]
+        public void SetCoordinates()
+        {
+            var items = GenerateItems(3);
+            
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).SetCoordinates(3, 2));
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Cell(1, 1).Value.Should().Be(string.Empty);
+                firstSheet.Cell(3, 2).Value.Should().NotBeNull();
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.Integration)]
+        public void HideHeaders()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideHeaders());
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count);
+                
             }
         }
 
