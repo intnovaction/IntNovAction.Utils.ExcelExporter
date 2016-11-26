@@ -7,9 +7,31 @@
     public class FormatConfigurator
     {
         internal bool _bold = false;
+        internal ColorInfo _color;
         internal int? _fontSize = null;
         internal bool _italic = false;
         internal bool _underline = false;
+
+        internal class ColorInfo
+        {
+            public ColorInfo(int red, int green, int blue)
+            {
+                Red = red;
+                Green = green;
+                Blue = blue;
+            }
+
+            public int Red { get; private set; }
+            public int Green { get; private set; }
+            public int Blue { get; private set; }
+        }
+
+        public FormatConfigurator Color(int red, int green, int blue)
+        {
+            _color = new ColorInfo(red, green, blue);
+            
+            return this;
+        }
 
         public FormatConfigurator Bold()
         {

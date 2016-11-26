@@ -79,6 +79,12 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                 range.Style.Font.Italic = true;
             }
 
+            if (configurator._color != null)
+            {
+                range.Style.Font.FontColor = XLColor.FromArgb(configurator._color.Red, configurator._color.Green, configurator._color.Blue);
+            }
+             
+
             if (configurator._fontSize.HasValue)
             {
                 range.Style.Font.FontSize = configurator._fontSize.Value;
@@ -96,11 +102,11 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
             }
         }
 
-        private List<PropInfo> ReadClassInfo()
+        private List<SheetColumnInfo> ReadClassInfo()
         {
             var type = typeof(TDataItem);
 
-            var result = new List<PropInfo>();
+            var result = new List<SheetColumnInfo>();
 
             var allProps = type.GetProperties();
             foreach (var prop in allProps)
@@ -109,7 +115,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
 
                 if (attr != null)
                 {
-                    result.Add(new PropInfo()
+                    result.Add(new SheetColumnInfo()
                     {
                         DisplayName = attr.GetName() ?? prop.Name,
                         Order = attr.GetOrder() ?? int.MaxValue,
@@ -118,7 +124,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
                 }
                 else
                 {
-                    result.Add(new PropInfo()
+                    result.Add(new SheetColumnInfo()
                     {
                         DisplayName = prop.Name,
                         Order = Int16.MaxValue,
