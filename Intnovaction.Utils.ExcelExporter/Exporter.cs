@@ -1,4 +1,4 @@
-﻿using IntNovAction.Utils.ExcelExporter.FormatExporters;
+﻿using IntNovAction.Utils.ExcelExporter.ExcelWriters;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System;
 using System.IO;
@@ -62,9 +62,9 @@ namespace IntNovAction.Utils.ExcelExporter
             return elems;
         }
 
-        private ExcelGenerator GetFormatter()
+        private ExcelFileWriter GetFormatter()
         {
-            return new ExcelGenerator();
+            return new ExcelFileWriter();
         }
     }
 }

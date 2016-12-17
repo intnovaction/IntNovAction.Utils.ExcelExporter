@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
 {
@@ -9,17 +12,17 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     public class SheetConfigurator<TDataItem> : SheetConfiguratorBase
         where TDataItem : new()
     {
+        internal List<ColumnConfigurator> _columnsConfig;
         internal IEnumerable<TDataItem> _data;
 
         internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _fontFormatters;
 
         internal bool _hideColumnHeaders = false;
-
-       
-
         public SheetConfigurator()
         {
             _fontFormatters = new List<Tuple<Func<TDataItem, bool>, FormatConfigurator>>();
+
+            _columnsConfig = ReadClassColumns();
         }
 
         /// <summary>
@@ -39,24 +42,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         }
 
         /// <summary>
-        /// Establece las coordenadas de donde empieza a pintar los datos
-        /// </summary>
-        /// <param name="initialRow"></param>
-        /// <param name="initialColumn"></param>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> SetCoordinates(int initialRow, int initialColumn)
-        {
-            if (initialRow < 1 || initialColumn < 1)
-            {
-                throw new ArgumentOutOfRangeException("The minimum coordinates are 1, 1");
-            }
-
-            _initialRow = initialRow;
-            _initialColumn = initialColumn;
-            return this;
-        }
-
-        /// <summary>
         /// Indica que no se muestren los headers de las columnas
         /// </summary>
         /// <returns></returns>
@@ -65,8 +50,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _hideColumnHeaders = true;
             return this;
         }
-
-       
 
         /// <summary>
         /// Establece el nombre de la hoja
@@ -90,6 +73,23 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
+        /// <summary>
+        /// Establece las coordenadas de donde empieza a pintar los datos
+        /// </summary>
+        /// <param name="initialRow"></param>
+        /// <param name="initialColumn"></param>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> SetCoordinates(int initialRow, int initialColumn)
+        {
+            if (initialRow < 1 || initialColumn < 1)
+            {
+                throw new ArgumentOutOfRangeException("The minimum coordinates are 1, 1");
+            }
+
+            _initialRow = initialRow;
+            _initialColumn = initialColumn;
+            return this;
+        }
         /// <summary>
         /// Establece los datos a mostrar en la hoja
         /// </summary>
@@ -136,6 +136,48 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _title.Text(_name);
 
             return this;
+        }
+
+
+        /// <summary>
+        /// Lee las propiedades de la clase de la que vamos a pintar el excel y rellena una lista
+        /// </summary>
+        /// <returns></returns>
+        private List<ColumnConfigurator> ReadClassColumns()
+        {
+            var type = typeof(TDataItem);
+
+            var result = new List<ColumnConfigurator>();
+
+            var allProps = type.GetProperties();
+            foreach (var prop in allProps)
+            {
+                var attr = prop.GetCustomAttribute<DisplayAttribute>();
+
+                if (attr != null)
+                {
+                    result.Add(new ColumnConfigurator()
+                    {
+                        DisplayName = attr.GetName() ?? prop.Name,
+                        Order = attr.GetOrder() ?? int.MaxValue,
+                        PropertyInfo = prop,
+                    });
+                }
+                else
+                {
+                    result.Add(new ColumnConfigurator()
+                    {
+                        DisplayName = prop.Name,
+                        Order = Int16.MaxValue,
+                        PropertyInfo = prop,
+                    });
+                }
+            }
+
+            // Ordenamos
+            result = result.OrderBy(p => p.Order).ThenBy(p => p.DisplayName).ToList();
+
+            return result;
         }
     }
 }

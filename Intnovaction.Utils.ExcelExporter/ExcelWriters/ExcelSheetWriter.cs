@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace IntNovAction.Utils.ExcelExporter.FormatExporters
+namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 {
     internal class ExcelSheetGenerator<TDataItem>
          where TDataItem : new()
@@ -18,7 +18,7 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
         public void WriteSheet(XLWorkbook workbook, SheetConfigurator<TDataItem> sheetConfig)
 
         {
-            var _classPropInfo = ReadClassInfo();
+            var _classPropInfo = sheetConfig._columnsConfig;
 
             IXLWorksheet worksheet = null;
             if (workbook.Worksheets.Count < sheetConfig._order + 1)
@@ -117,41 +117,5 @@ namespace IntNovAction.Utils.ExcelExporter.FormatExporters
             }
         }
 
-        private List<SheetColumnInfo> ReadClassInfo()
-        {
-            var type = typeof(TDataItem);
-
-            var result = new List<SheetColumnInfo>();
-
-            var allProps = type.GetProperties();
-            foreach (var prop in allProps)
-            {
-                var attr = prop.GetCustomAttribute<DisplayAttribute>();
-
-                if (attr != null)
-                {
-                    result.Add(new SheetColumnInfo()
-                    {
-                        DisplayName = attr.GetName() ?? prop.Name,
-                        Order = attr.GetOrder() ?? int.MaxValue,
-                        PropertyInfo = prop,
-                    });
-                }
-                else
-                {
-                    result.Add(new SheetColumnInfo()
-                    {
-                        DisplayName = prop.Name,
-                        Order = Int16.MaxValue,
-                        PropertyInfo = prop,
-                    });
-                }
-            }
-
-            // Ordenamos
-            result = result.OrderBy(p => p.Order).ThenBy(p => p.DisplayName).ToList();
-
-            return result;
-        }
     }
 }

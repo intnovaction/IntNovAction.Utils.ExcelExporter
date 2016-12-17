@@ -19,10 +19,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             {
                 throw new DuplicatedSheetNameException(sheetConfigurator._name);
             }
-
-            var sheetNumber = this.Count() + 1;
-            string sheetName = $"Sheet {sheetNumber}";
-
+            
             base.Add(sheetConfigurator);
         }
     }

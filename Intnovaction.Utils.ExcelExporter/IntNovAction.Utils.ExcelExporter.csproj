@@ -57,13 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\DuplicatedColumnTitleException.cs" />
     <Compile Include="Exceptions\DuplicatedSheetNameException.cs" />
-    <Compile Include="FormatExporters\ExcelGenerator.cs" />
-    <Compile Include="FormatExporters\ExcelSheetGenerator.cs" />
+    <Compile Include="ExcelWriters\ExcelWorkbookWriter.cs" />
+    <Compile Include="ExcelWriters\ExcelSheetWriter.cs" />
     <Compile Include="Exporter.cs" />
-    <Compile Include="FormatExporters\SheetColumnInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ColumnConfigurator.cs" />
     <Compile Include="Utils\FormatConfigurator.cs" />
+    <Compile Include="Utils\ColumnCollection.cs" />
     <Compile Include="Utils\TitleConfigurator.cs" />
     <Compile Include="Utils\SheetCollection.cs" />
     <Compile Include="Utils\SheetConfigurator.cs" />

@@ -3,9 +3,9 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace IntNovAction.Utils.ExcelExporter.FormatExporters
+namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 {
-    public class ExcelGenerator
+    public class ExcelFileWriter
     {
         public byte[] Export(Exporter exporter)
         {
