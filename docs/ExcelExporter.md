@@ -138,12 +138,11 @@ Podemos especificar en lugar del nombre de la columna, una expresión para realiz
 ```c#
     var exporter = new Exporter()
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
-        .Title()
 		.Columns(cols =>
 	    {
             cols.Clear();
             cols.AddColumn(prop => prop.PropA);
-            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 2");;
+            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1");
         })
     );
 ```
