@@ -66,6 +66,7 @@
     <Compile Include="Utils\ColumnConfigurator.cs" />
     <Compile Include="Utils\FormatConfigurator.cs" />
     <Compile Include="Utils\ColumnCollection.cs" />
+    <Compile Include="Utils\ReflectionHelper.cs" />
     <Compile Include="Utils\TitleConfigurator.cs" />
     <Compile Include="Utils\SheetCollection.cs" />
     <Compile Include="Utils\SheetConfigurator.cs" />

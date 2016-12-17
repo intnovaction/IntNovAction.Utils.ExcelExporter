@@ -9,5 +9,8 @@
         public const string Title = "Excel Exporter - Integration - Title";
 
         public const string SheetCollection = "Excel Exporter - SheetCollection";
+
+        public const string ColumnsConfig = "Excel Exporter - ColumnsConfig";
+        
     }
 }

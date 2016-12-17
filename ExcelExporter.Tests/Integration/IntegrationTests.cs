@@ -268,7 +268,7 @@ namespace ExcelExporter.Tests.Integration
             var items = GenerateItems(3);
 
             var sheetName = "Hoja 1";
-            
+
             var exporter = new Exporter()
                .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).Title());
 
@@ -318,7 +318,7 @@ namespace ExcelExporter.Tests.Integration
             var items = GenerateItems(3);
 
             var sheetName = "Hoja 1";
-            
+
 
             var exporter = new Exporter()
                .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName)
@@ -332,10 +332,118 @@ namespace ExcelExporter.Tests.Integration
                 var workbook = new XLWorkbook(stream);
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
-                
+
                 firstSheet.Cell(1, 1).Style.Font.Bold.Should().Be(true);
                 firstSheet.Cell(2, 1).Style.Font.Bold.Should().Be(false);
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void ColumnConfig_ExplicitColumns()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA);
+                        cols.AddColumn(prop => prop.PropA).Title("Prop a (2)");
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
+                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).Value.Should().Be("Prop a (2)");               
+            }
+        }
+
+
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void ColumnConfig_ExplicitColumnsWithTitle()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items)
+                    .Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA);
+                        cols.AddColumn(prop => prop.PropA).Title("PropC Inc");
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
+                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).Value.Should().Be("PropC Inc");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void ColumnConfig_ExplicitColumnsWithTransform()
+        {
+            var items = GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA);
+                        cols.AddColumnExpr(prop => prop.PropC + 1, "Plus 2");
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+               
+
+                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).Value.Should().Be("Plus 2");
+
+                for (int excelRow = 2; excelRow <= items.Count + 1; excelRow++)
+                {
+                    var originalItem = items[excelRow - 2];
+
+                    var secondValue = firstSheet.Cell(excelRow, 2).Value;
+                    secondValue.CastTo<int>().Should().Be(originalItem.PropC + 1);                    
+                }
+
+                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
+                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 1);
             }
         }
 

@@ -1,4 +1,4 @@
-#Excel Exporter (PoC)
+# Excel Exporter (PoC)
 
 **Fase preliminar de desarrollo**
 
@@ -22,7 +22,7 @@ Podemos generar una clase con los datos que vamos a mostrar
 
 Creamos un IEnumerable con items de esa clase...
 
-````c#
+```c#
     var dataToExport = new List<TestListItem>();
     for (int i = 0; i < 5; i++)
     {
@@ -35,18 +35,19 @@ Creamos un IEnumerable con items de esa clase...
     }
 ```
 
-Configuramos el excel, creando una hoja, con un nombre.
+Configuramos el excel, creando una hoja, con un nombre e indicando los datos a pintar.
+La librería leerá los metadatos de la clase, creando las columnas con el nombre indicado en los atributos.
 
 ```c#
     var exporter = new Exporter()
-		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name"));
+		.AddSheet<TestListItem>(c => c.Name("Sheet Name").SetData(dataToExport));
 ```
 
 Por ultimo exportamos el excel
 
     var result = exporter.Export();
 
-##Crear múltiples hojas##
+## Crear múltiples hojas
 
 Para crear múltiples hojas con múltiples sets de datos llamamos varias veces a AddSheet:
 
@@ -56,7 +57,7 @@ Para crear múltiples hojas con múltiples sets de datos llamamos varias veces a A
         .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet 2 Name"));
 ```
 
-##No pintar la cabecera con los nombres de columnas de la tabla##
+## No pintar la cabecera con los nombres de columnas de la tabla
 
 Para no pintar en la tabla los nombres de las columnas y que empiecen los datos en la coordenadas iniciales.
 
@@ -66,7 +67,7 @@ Para no pintar en la tabla los nombres de las columnas y que empiecen los datos 
         
 ```
 
-##Establecer coordenadas para pintar la tabla##
+## Establecer coordenadas para pintar la tabla
 
 Podemos especificar que no se empiecen a pintar las filas en A1, sino donde queramos
 
@@ -76,7 +77,7 @@ Podemos especificar que no se empiecen a pintar las filas en A1, sino donde quer
         
 ```
 
-##Formatear las filas en base a los valores##
+## Formatear las filas en base a los valores
 
 Podemos establecer condiciones (reglas de formato a nivel de fila) en forma de expresiones, que apliquen formatos:
 - Bold
@@ -95,7 +96,7 @@ Si el valor de PropC es 3, entonces haz la fila en negrita y cursiva:
 		);
 ```
 
-##Establecer un titulo en la hoja##
+## Establecer un titulo en la hoja
 
 Podemos establecer un titulo por defecto en la parte superior
 
@@ -112,5 +113,37 @@ O personalizarlo con un texto, formato, etc.
     var exporter = new Exporter()
 	.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
             .Title(t => t.Text("Title Text").Format(f => f.Bold()))
+    );
+```
+## Especificar las columnas a mostrar
+Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los metadatos del atributo Display de la propiedad (si se utiliza) se tendrán en cuenta.
+
+
+```c#
+    var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+        .Title()
+		.Columns(cols =>
+	    {
+            cols.Clear();
+            cols.AddColumn(prop => prop.PropA);
+            cols.AddColumn(prop => prop.PropA).Title("Prop A (2)");
+        })
+    );
+```
+
+## Especificar los datos a mostrar mediante expresiones
+Podemos especificar en lugar del nombre de la columna, una expresión para realizar transformaciones a los datos. Hay que especificar el titulo de la columna.
+
+```c#
+    var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+        .Title()
+		.Columns(cols =>
+	    {
+            cols.Clear();
+            cols.AddColumn(prop => prop.PropA);
+            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 2");;
+        })
     );
 ```

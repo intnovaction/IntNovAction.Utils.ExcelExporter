@@ -12,7 +12,15 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     public class SheetConfigurator<TDataItem> : SheetConfiguratorBase
         where TDataItem : new()
     {
-        internal List<ColumnConfigurator> _columnsConfig;
+
+        /// <summary>
+        /// La información de las columnas
+        /// </summary>
+        internal ColumnCollection<TDataItem> _columnsConfig;
+
+        /// <summary>
+        /// Los datos a pintar
+        /// </summary>
         internal IEnumerable<TDataItem> _data;
 
         internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _fontFormatters;
@@ -90,6 +98,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _initialColumn = initialColumn;
             return this;
         }
+
         /// <summary>
         /// Establece los datos a mostrar en la hoja
         /// </summary>
@@ -101,16 +110,28 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
-        
+        /// <summary>
+        /// Configura las columnas de la hoja
+        /// </summary>
+        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
+        /// <param name="config">Expresioón para trabajar la coleccion de columnas</param>
+        /// <returns>Exportador</returns>
+        public SheetConfigurator<TDataItem> Columns(Action<ColumnCollection<TDataItem>> config)
+        {
+
+            config.Invoke(_columnsConfig);
+
+            return this;
+        }
 
 
         /// <summary>
         /// Establece la cabecera de la hoja
         /// </summary>
         /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
-        /// <param name="config">Expresioón para trabajar con el configurador de la cabecera</param>
+        /// <param name="config">Expresión para trabajar con el configurador de la cabecera</param>
         /// <returns>Exportador</returns>
-        public SheetConfigurator<TDataItem> Title(Action<TitleConfigurator> config)            
+        public SheetConfigurator<TDataItem> Title(Action<TitleConfigurator> config)
         {
             var configurator = new TitleConfigurator();
             configurator.Text(_name);
@@ -118,7 +139,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             config.Invoke(configurator);
 
             this._title = configurator;
-            
+
 
             return this;
         }
@@ -131,7 +152,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         public SheetConfigurator<TDataItem> Title()
         {
             var configurator = new TitleConfigurator();
-            
+
             this._title = configurator;
             _title.Text(_name);
 
@@ -143,41 +164,23 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// Lee las propiedades de la clase de la que vamos a pintar el excel y rellena una lista
         /// </summary>
         /// <returns></returns>
-        private List<ColumnConfigurator> ReadClassColumns()
+        private ColumnCollection<TDataItem> ReadClassColumns()
         {
             var type = typeof(TDataItem);
 
-            var result = new List<ColumnConfigurator>();
+            var result = new ColumnCollection<TDataItem>();
 
             var allProps = type.GetProperties();
             foreach (var prop in allProps)
             {
-                var attr = prop.GetCustomAttribute<DisplayAttribute>();
+                ColumnConfigurator<TDataItem> dataItem = ReflectionHelper<TDataItem>.GetColumnFromPropertyInfo(prop);
 
-                if (attr != null)
-                {
-                    result.Add(new ColumnConfigurator()
-                    {
-                        DisplayName = attr.GetName() ?? prop.Name,
-                        Order = attr.GetOrder() ?? int.MaxValue,
-                        PropertyInfo = prop,
-                    });
-                }
-                else
-                {
-                    result.Add(new ColumnConfigurator()
-                    {
-                        DisplayName = prop.Name,
-                        Order = Int16.MaxValue,
-                        PropertyInfo = prop,
-                    });
-                }
+                result.AddColumn(dataItem);
             }
 
-            // Ordenamos
-            result = result.OrderBy(p => p.Order).ThenBy(p => p.DisplayName).ToList();
 
             return result;
         }
+
     }
 }

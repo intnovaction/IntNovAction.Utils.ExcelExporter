@@ -20,6 +20,8 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
         {
             var _classPropInfo = sheetConfig._columnsConfig;
 
+            var columns = sheetConfig._columnsConfig.GetColumns();
+
             IXLWorksheet worksheet = null;
             if (workbook.Worksheets.Count < sheetConfig._order + 1)
             {
@@ -48,11 +50,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
             // Formato de la cabecera (si es necesario)
             if (!sheetConfig._hideColumnHeaders)
             {
-                for (var column = initRow; column <= _classPropInfo.Count; column++)
+                for (var column = initRow; column <= columns.Count; column++)
                 {
-                    var columnToDisplay = _classPropInfo[column - 1];
+                    var columnToDisplay = columns[column - 1];
                     var cell = worksheet.Cell(initRow, column);
-                    cell.Value = columnToDisplay.DisplayName;
+                    cell.Value = columnToDisplay._title;
                 }
 
                 initRow++;
@@ -65,12 +67,19 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
             {
                 var rowDataItem = sheetConfig._data.ElementAt(row - initRow);
 
-                for (var column = 1; column <= _classPropInfo.Count; column++)
+                for (var column = 1; column <= columns.Count; column++)
                 {
                     var cell = worksheet.Cell(row, column);
-                    var propToDisplay = _classPropInfo[column - 1].PropertyInfo;
-
-                    cell.Value = propToDisplay.GetValue(rowDataItem);
+                    
+                    if (columns[column - 1].Expression == null)
+                    {
+                        var propToDisplay = columns[column - 1].PropertyInfo;
+                        cell.Value = propToDisplay.GetValue(rowDataItem);
+                    }
+                    else
+                    {
+                        cell.Value = columns[column - 1].Expression.Invoke(rowDataItem);
+                    }
                 }
 
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);
