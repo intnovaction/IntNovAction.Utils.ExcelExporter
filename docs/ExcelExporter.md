@@ -1,4 +1,4 @@
-# Excel Exporter (PoC) [![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
+# Excel Exporter [![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
 
 Permite exportar un IEnumerable a una o varias hoja excel. Aplicando formato a las filas en base a valores de cada uno de los elementos del IEnumerable.
 
