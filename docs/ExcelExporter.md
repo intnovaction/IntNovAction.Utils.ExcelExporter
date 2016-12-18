@@ -122,7 +122,6 @@ Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los met
 ```c#
     var exporter = new Exporter()
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
-        .Title()
 		.Columns(cols =>
 	    {
             cols.Clear(); // Limpiamos todoas las columnas autogeneradas
@@ -137,7 +136,6 @@ Con HideColumn podemos quitar alguna de las columnas autogeneradas. Muy util cua
 ```c#
     var exporter = new Exporter()
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
-        .Title()
 		.Columns(cols =>
 	    {
             cols.HideColumn(prop => prop.PropA);            
