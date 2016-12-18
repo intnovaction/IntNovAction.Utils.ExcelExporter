@@ -1,8 +1,6 @@
-# Excel Exporter (PoC)
+# Excel Exporter (PoC) [![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
 
-**Fase preliminar de desarrollo**
-
-Permite exportar un IEnumerable a una hoja excel. Aplicando formato a las filas en base a valores de cada uno de los elementos del IEnumerable.
+Permite exportar un IEnumerable a una o varias hoja excel. Aplicando formato a las filas en base a valores de cada uno de los elementos del IEnumerable.
 
 Puede generar las columnas del excel leyendo los valores del atributo Display (Name, Order...)
 
@@ -36,7 +34,7 @@ Creamos un IEnumerable con items de esa clase...
 ```
 
 Configuramos el excel, creando una hoja, con un nombre e indicando los datos a pintar.
-La librerÌa leer· los metadatos de la clase, creando las columnas con el nombre indicado en los atributos.
+La librer√≠a leer√° los metadatos de la clase, creando las columnas con el nombre indicado en los atributos.
 
 ```c#
     var exporter = new Exporter()
@@ -47,9 +45,9 @@ Por ultimo exportamos el excel
 
     var result = exporter.Export();
 
-## Crear m˙ltiples hojas
+## Crear m√∫ltiples hojas
 
-Para crear m˙ltiples hojas con m˙ltiples sets de datos llamamos varias veces a AddSheet:
+Para crear m√∫ltiples hojas con m√∫ltiples sets de datos llamamos varias veces a AddSheet:
 
 ```c#
     var exporter = new Exporter()
@@ -116,7 +114,7 @@ O personalizarlo con un texto, formato, etc.
     );
 ```
 ## Especificar las columnas a mostrar
-Mediante la colecciÛn columns podemos aÒadir, ocultar o quitar columnas. Los metadatos del atributo Display de la propiedad (si se utiliza) se tendr·n en cuenta.
+Mediante la colecci√≥n columns podemos a√±adir, ocultar o quitar columnas. Los metadatos del atributo Display de la propiedad (si se utiliza) se tendr√°n en cuenta.
 
 
 ```c#
@@ -144,7 +142,7 @@ Con HideColumn podemos quitar alguna de las columnas autogeneradas. Muy util cua
 ```
 
 ## Modificar los datos a mostrar mediante expresiones
-Podemos especificar en lugar del nombre de la columna, una expresiÛn para realizar transformaciones a los datos. Hay que especificar el titulo de la columna.
+Podemos especificar en lugar del nombre de la columna, una expresi√≥n para realizar transformaciones a los datos. Hay que especificar el titulo de la columna.
 
 ```c#
     var exporter = new Exporter()
@@ -153,7 +151,7 @@ Podemos especificar en lugar del nombre de la columna, una expresiÛn para realiz
 	    {
             cols.Clear(); // Limpiamos todoas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA); // Mostramos la columna PropA
-            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sum·ndole 1 y lo llamamos PropC plus 1
+            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sum√°ndole 1 y lo llamamos PropC plus 1
         })
     );
 ```
