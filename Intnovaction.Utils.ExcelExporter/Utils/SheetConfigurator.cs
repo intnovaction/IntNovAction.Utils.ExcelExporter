@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Reflection;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
 {
@@ -23,14 +20,18 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// </summary>
         internal IEnumerable<TDataItem> _data;
 
-        internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _fontFormatters;
 
-        internal bool _hideColumnHeaders = false;
+        /// <summary>
+        /// Los formateadores de las filas
+        /// </summary>
+        internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _rowFormatRules;
+
+        
+
         public SheetConfigurator()
         {
-            _fontFormatters = new List<Tuple<Func<TDataItem, bool>, FormatConfigurator>>();
-
-            _columnsConfig = ReadClassColumns();
+            _rowFormatRules = new List<Tuple<Func<TDataItem, bool>, FormatConfigurator>>();
+            _columnsConfig = new ColumnCollection<TDataItem>();
         }
 
         /// <summary>
@@ -44,8 +45,20 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             var configurator = new FormatConfigurator();
             formatConfigurator.Invoke(configurator);
 
-            _fontFormatters.Add(new Tuple<Func<TDataItem, bool>, FormatConfigurator>(condition, configurator));
+            _rowFormatRules.Add(new Tuple<Func<TDataItem, bool>, FormatConfigurator>(condition, configurator));
 
+            return this;
+        }
+
+        /// <summary>
+        /// Configura las columnas de la hoja
+        /// </summary>
+        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
+        /// <param name="config">Expresión para trabajar la coleccion de columnas</param>
+        /// <returns>Exportador</returns>
+        public SheetConfigurator<TDataItem> Columns(Action<ColumnCollection<TDataItem>> config)
+        {
+            config.Invoke(_columnsConfig);
             return this;
         }
 
@@ -109,22 +122,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _data = data;
             return this;
         }
-
-        /// <summary>
-        /// Configura las columnas de la hoja
-        /// </summary>
-        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
-        /// <param name="config">Expresioón para trabajar la coleccion de columnas</param>
-        /// <returns>Exportador</returns>
-        public SheetConfigurator<TDataItem> Columns(Action<ColumnCollection<TDataItem>> config)
-        {
-
-            config.Invoke(_columnsConfig);
-
-            return this;
-        }
-
-
         /// <summary>
         /// Establece la cabecera de la hoja
         /// </summary>
@@ -159,28 +156,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
-
-        /// <summary>
-        /// Lee las propiedades de la clase de la que vamos a pintar el excel y rellena una lista
-        /// </summary>
-        /// <returns></returns>
-        private ColumnCollection<TDataItem> ReadClassColumns()
-        {
-            var type = typeof(TDataItem);
-
-            var result = new ColumnCollection<TDataItem>();
-
-            var allProps = type.GetProperties();
-            foreach (var prop in allProps)
-            {
-                ColumnConfigurator<TDataItem> dataItem = ReflectionHelper<TDataItem>.GetColumnFromPropertyInfo(prop);
-
-                result.AddColumn(dataItem);
-            }
-
-
-            return result;
-        }
-
+        
     }
 }

@@ -125,14 +125,27 @@ Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los met
         .Title()
 		.Columns(cols =>
 	    {
-            cols.Clear();
-            cols.AddColumn(prop => prop.PropA);
+            cols.Clear(); // Limpiamos todoas las columnas autogeneradas
+            cols.AddColumn(prop => prop.PropA);            
             cols.AddColumn(prop => prop.PropA).Title("Prop A (2)");
         })
     );
 ```
 
-## Especificar los datos a mostrar mediante expresiones
+Con HideColumn podemos quitar alguna de las columnas autogeneradas. Muy util cuando pasamos un DTO que tiene IDs que no queremos mostrar.
+
+```c#
+    var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+        .Title()
+		.Columns(cols =>
+	    {
+            cols.HideColumn(prop => prop.PropA);            
+        })
+    );
+```
+
+## Modificar los datos a mostrar mediante expresiones
 Podemos especificar en lugar del nombre de la columna, una expresión para realizar transformaciones a los datos. Hay que especificar el titulo de la columna.
 
 ```c#
@@ -140,9 +153,9 @@ Podemos especificar en lugar del nombre de la columna, una expresión para realiz
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
 		.Columns(cols =>
 	    {
-            cols.Clear();
-            cols.AddColumn(prop => prop.PropA);
-            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1");
+            cols.Clear(); // Limpiamos todoas las columnas autogeneradas
+            cols.AddColumn(prop => prop.PropA); // Mostramos la columna PropA
+            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sumándole 1 y lo llamamos PropC plus 1
         })
     );
 ```

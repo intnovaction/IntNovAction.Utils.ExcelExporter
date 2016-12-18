@@ -1,6 +1,8 @@
 ﻿using IntNovAction.Utils.ExcelExporter.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
@@ -14,7 +16,22 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         public ColumnCollection()
         {
             _columnCol = new List<Utils.ColumnConfigurator<TDataItem>>();
+
+            var type = typeof(TDataItem);
+            var allProps = type.GetProperties();
+            foreach (var prop in allProps)
+            {
+                var dataItem = ReflectionHelper<TDataItem>.GetColumnFromPropertyInfo(prop);
+                AddColumn(dataItem);
+            }
+            if (_columnCol.Select(p => p._orderFromMetadata).Distinct().Count() > 1)
+            {
+                _columnCol = _columnCol.OrderBy(p => p._orderFromMetadata).ToList();
+            }
+            
         }
+
+
 
         /// <summary>
         /// Añade una column
@@ -25,29 +42,56 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             var columnConfigurator = new ColumnConfigurator<TDataItem>();
 
             columnConfigurator.Expression = expr;
-            columnConfigurator._title = title;
-            columnConfigurator.Order = int.MaxValue;
+            columnConfigurator._columnTitle = title;
+            columnConfigurator._orderFromMetadata = int.MaxValue;
             _columnCol.Add(columnConfigurator);
 
             return columnConfigurator;
 
         }
 
-        public ColumnConfigurator<TDataItem> AddColumn<TProp>(System.Linq.Expressions.Expression<Func<TDataItem, TProp>> expression)
+        /// <summary>
+        /// Añade una columna
+        /// </summary>
+        /// <typeparam name="TProp"></typeparam>
+        /// <param name="expression">Expresión lambda con la propiedad que se pintará en la columna</param>
+        /// <returns></returns>
+        public ColumnConfigurator<TDataItem> AddColumn<TProp>(Expression<Func<TDataItem, TProp>> expression)
         {
-            var body = expression.Body as System.Linq.Expressions.MemberExpression;
-            if (body == null)
-            {
-                throw new ArgumentException("'expression' should be a member expression");
-            }
-
-            var propertyInfo = (System.Reflection.PropertyInfo)body.Member;
+            PropertyInfo propertyInfo = ExtractPropertyInfoFromExpression(expression);
 
             var columnConfigurator = ReflectionHelper<TDataItem>.GetColumnFromPropertyInfo(propertyInfo);
 
             _columnCol.Add(columnConfigurator);
 
             return columnConfigurator;
+        }
+
+        /// <summary>
+        /// Oculta una columna
+        /// </summary>
+        /// <typeparam name="TProp"></typeparam>
+        /// <param name="expression">Expresión lambda con la propiedad correspondiente a la columna que no se pintará</param>
+        /// <returns></returns>
+        public void HideColumn<TProp>(Expression<Func<TDataItem, TProp>> expression)
+        {
+            PropertyInfo propertyInfo = ExtractPropertyInfoFromExpression(expression);
+
+            _columnCol.RemoveAll(p => p.PropertyInfo != null && p.PropertyInfo.Name == propertyInfo.Name);
+
+            return;
+
+        }
+
+        private PropertyInfo ExtractPropertyInfoFromExpression<TProp>(Expression<Func<TDataItem, TProp>> expression)
+        {
+            var body = expression.Body as MemberExpression;
+            if (body == null)
+            {
+                throw new ArgumentException("'expression' should be a member expression");
+            }
+            var propertyInfo = (PropertyInfo)body.Member;
+            return propertyInfo;
         }
 
         internal ColumnConfigurator<TDataItem> AddColumn(ColumnConfigurator<TDataItem> column)
@@ -66,18 +110,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
         public IList<ColumnConfigurator<TDataItem>> GetColumns()
         {
-            // Ordenamos
-            if (_columnCol.Select(p => p.Order).Distinct().Count() != 1)
-            {
-                return _columnCol
-                    .OrderBy(p => p.Order)
-                    .ThenBy(p => p._title)
-                    .ToList();
-            }
-            else
-            {
-                return _columnCol;
-            }
+            return _columnCol;
         }
 
     }

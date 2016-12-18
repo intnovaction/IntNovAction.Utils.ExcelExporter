@@ -54,7 +54,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 {
                     var columnToDisplay = columns[column - 1];
                     var cell = worksheet.Cell(initRow, column);
-                    cell.Value = columnToDisplay._title;
+                    cell.Value = columnToDisplay._columnTitle;
                 }
 
                 initRow++;
@@ -117,7 +117,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
         private void FormatRow(IXLRow excelRow, TDataItem data, SheetConfigurator<TDataItem> configurator)
         {
-            foreach (var filter in configurator._fontFormatters)
+            foreach (var filter in configurator._rowFormatRules)
             {
                 if (filter.Item1(data))
                 {

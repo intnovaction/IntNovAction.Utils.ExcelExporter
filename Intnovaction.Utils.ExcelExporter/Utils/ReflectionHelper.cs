@@ -19,8 +19,8 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             {
                 dataItem = new ColumnConfigurator<TDataItem>()
                 {
-                    _title = attr.GetName() ?? prop.Name,
-                    Order = attr.GetOrder() ?? int.MaxValue,
+                    _columnTitle = attr.GetName() ?? prop.Name,
+                    _orderFromMetadata = attr.GetOrder() ?? int.MaxValue,
                     PropertyInfo = prop,
                 };
             }
@@ -28,8 +28,8 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             {
                 dataItem = new ColumnConfigurator<TDataItem>()
                 {
-                    _title = prop.Name,
-                    Order = Int16.MaxValue,
+                    _columnTitle = prop.Name,
+                    _orderFromMetadata = Int16.MaxValue,
                     PropertyInfo = prop,
                 };
             }

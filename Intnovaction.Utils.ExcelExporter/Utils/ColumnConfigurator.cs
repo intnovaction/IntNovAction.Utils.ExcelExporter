@@ -14,37 +14,46 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     public class ColumnConfigurator<TDataItem>
     {
         /// <summary>
-        /// Nombre a mostrar
+        /// Nombre a mostrar en la columna
         /// </summary>
-        internal string _title { get; set; }
+        internal string _columnTitle { get; set; }
 
         public ColumnConfigurator<TDataItem> Title(string title)
         {
-            _title = title;
+            _columnTitle = title;
             return this;
         }
 
+        // TODO: Refactor, si solo se usa para montarlo.. no deberia estar ahi
         /// <summary>
-        /// Orden en el que se muestra
+        /// Orden que se saca de los metadatos. Luego no se usa!
         /// </summary>
-        internal int Order { get; set; }
+        internal int _orderFromMetadata { get; set; }
 
         /// <summary>
-        /// Propiedad de la clase correspondiente a la columna
+        /// Propiedad de la clase correspondiente a la columna. Si es una expresión, es nula
         /// </summary>
         internal PropertyInfo PropertyInfo { get; set; }
 
-        private Func<TDataItem, object> _expr = null;
+        /// <summary>
+        /// En caso de que se utilice una expresión para poner un valor a la celda, la expresión
+        /// </summary>
+        private Func<TDataItem, object> _cellValueExpression = null;
 
-        public Func<TDataItem, object> Expression
+        internal Func<TDataItem, object> Expression
         {
             get
             {
-                return _expr;
+                return _cellValueExpression;
             }
-            internal set
+            set
             {
-                _expr = value;
+                if (value != null && PropertyInfo != null)
+                {
+                    PropertyInfo = null;
+                    _orderFromMetadata = int.MaxValue;
+                }
+                _cellValueExpression = value;
             }
         }
     }

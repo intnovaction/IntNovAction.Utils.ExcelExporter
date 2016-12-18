@@ -12,6 +12,9 @@
         internal bool _italic = false;
         internal bool _underline = false;
 
+        /// <summary>
+        /// La info de color a poner
+        /// </summary>
         internal class ColorInfo
         {
             public ColorInfo(int red, int green, int blue)

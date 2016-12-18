@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace ExcelExporter.Tests.Integration
+namespace IntNovAction.Utils.ExcelExporter.Tests.Integration
 {
     [TestClass]
     public class ExporterTest
@@ -20,7 +20,7 @@ namespace ExcelExporter.Tests.Integration
         {
             var exporter = new Exporter();
 
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             exporter.AddSheet<TestListItem>(c =>
                 c.SetData(items).Name("Hoja 1")
@@ -32,7 +32,7 @@ namespace ExcelExporter.Tests.Integration
         public void Export()
         {
             var sheetTitle = "1-Sheet";
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var exporter = new Exporter()
                 .AddSheet<TestListItem>(c =>
@@ -58,7 +58,7 @@ namespace ExcelExporter.Tests.Integration
         public void ExportWithFormat()
         {
             var sheetTitle = "1-Sheet";
-            var items = GenerateItems(1);
+            var items = IntegrationTestsUtils.GenerateItems(1);
 
             var exporter = new Exporter()
                 .AddSheet<TestListItem>(c =>
@@ -92,8 +92,8 @@ namespace ExcelExporter.Tests.Integration
             var sheet1Rows = 2;
             var sheet2Rows = 3;
 
-            var items = GenerateItems(sheet1Rows);
-            var items2 = GenerateItems(sheet2Rows);
+            var items = IntegrationTestsUtils.GenerateItems(sheet1Rows);
+            var items2 = IntegrationTestsUtils.GenerateItems(sheet2Rows);
 
             var exporter = new Exporter()
                 .AddSheet<TestListItem>(c => c.SetData(items).Name(sheet1Name))
@@ -122,7 +122,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Integration)]
         public void UseExistingExcel()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporter.Tests.Test.xlsx");
 
@@ -153,7 +153,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Integration)]
         public void SetCoordinates()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
@@ -177,7 +177,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Integration)]
         public void HideColumnHeaders()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
@@ -201,7 +201,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.RowFormat)]
         public void FormatRow_RowShouldBeFormatted()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
@@ -233,7 +233,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.RowFormat)]
         public void FormatRow_RowShouldNotBeFormatted()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
@@ -265,7 +265,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Title)]
         public void ShowTitleText_Default()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
@@ -290,7 +290,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Title)]
         public void ShowTitleText_ExplicitTitle()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
             var sheetTitle = "Title";
@@ -315,7 +315,7 @@ namespace ExcelExporter.Tests.Integration
         [TestCategory(Categories.Title)]
         public void ShowTitleText_Format()
         {
-            var items = GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
@@ -339,128 +339,6 @@ namespace ExcelExporter.Tests.Integration
             }
         }
 
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ExplicitColumns()
-        {
-            var items = GenerateItems(3);
 
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items).Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.Clear();
-                        cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumn(prop => prop.PropA).Title("Prop a (2)");
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("Prop a (2)");               
-            }
-        }
-
-
-
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ExplicitColumnsWithTitle()
-        {
-            var items = GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items)
-                    .Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.Clear();
-                        cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumn(prop => prop.PropA).Title("PropC Inc");
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("PropC Inc");
-            }
-        }
-
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ExplicitColumnsWithTransform()
-        {
-            var items = GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items).Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.Clear();
-                        cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumnExpr(prop => prop.PropC + 1, "Plus 2");
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-               
-
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("Plus 2");
-
-                for (int excelRow = 2; excelRow <= items.Count + 1; excelRow++)
-                {
-                    var originalItem = items[excelRow - 2];
-
-                    var secondValue = firstSheet.Cell(excelRow, 2).Value;
-                    secondValue.CastTo<int>().Should().Be(originalItem.PropC + 1);                    
-                }
-
-                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 1);
-            }
-        }
-
-        private List<TestListItem> GenerateItems(int numItems)
-        {
-            var dataToExport = new List<TestListItem>();
-            for (int i = 0; i < numItems; i++)
-            {
-                dataToExport.Add(new TestListItem()
-                {
-                    PropA = $"PropA - {i}",
-                    PropB = $"PropB - {i}",
-                    PropC = i,
-                });
-            }
-
-            return dataToExport;
-        }
     }
 }
