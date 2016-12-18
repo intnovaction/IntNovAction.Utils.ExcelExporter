@@ -13,6 +13,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     public class ColumnCollection<TDataItem>
     {
         private List<ColumnConfigurator<TDataItem>> _columnCol;
+
         public ColumnCollection()
         {
             _columnCol = new List<Utils.ColumnConfigurator<TDataItem>>();
@@ -108,7 +109,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _columnCol.Clear();
         }
 
-        public IList<ColumnConfigurator<TDataItem>> GetColumns()
+        internal IList<ColumnConfigurator<TDataItem>> GetColumns()
         {
             return _columnCol;
         }
