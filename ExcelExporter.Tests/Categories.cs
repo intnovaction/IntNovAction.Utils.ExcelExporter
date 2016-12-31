@@ -11,6 +11,8 @@
         public const string SheetCollection = "Excel Exporter - SheetCollection";
 
         public const string ColumnsConfig = "Excel Exporter - ColumnsConfig";
-        
+
+        public const string PrintArea = "Excel Exporter - Print area";
+
     }
 }

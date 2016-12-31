@@ -17,9 +17,8 @@
 
         internal int _initialColumn = 1;
 
-
         internal TitleConfigurator _title = null;
 
-
+        internal bool _fitInOnePage = false;
     }
 }

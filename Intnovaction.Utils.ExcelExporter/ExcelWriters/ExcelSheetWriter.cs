@@ -12,7 +12,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
         }
 
         public void WriteSheet(XLWorkbook workbook, SheetConfigurator<TDataItem> sheetConfig)
-
         {
             var _classPropInfo = sheetConfig._columnsConfig;
 
@@ -33,7 +32,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             if (sheetConfig._title != null)
             {
-                var cell = worksheet.Cell(initRow, 1);
+                var cell = worksheet.Cell(initRow, initColumn);
                 cell.SetValue(sheetConfig._title._TitleText);
 
                 if (sheetConfig._title._Format != null)
@@ -94,6 +93,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                     }
                 }
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);
+            }
+
+            if (sheetConfig._fitInOnePage)
+            {
+                worksheet.PageSetup.PrintAreas.Add(sheetConfig._initialRow, sheetConfig._initialColumn, finalRow, initColumn + columns.Count);
             }
         }
 

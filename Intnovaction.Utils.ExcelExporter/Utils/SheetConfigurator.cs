@@ -155,6 +155,14 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
-        
+        /// <summary>
+        /// Imprime la hoja en una sola página
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> PrintInOnePage()
+        {
+            _fitInOnePage = true;
+            return this;
+        }
     }
 }
