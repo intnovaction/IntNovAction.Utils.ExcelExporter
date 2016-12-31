@@ -14,7 +14,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Internals
         [TestMethod]
         public void DuplicatedSheetName()
         {
-            var sheetCollection = new Utils.SheetCollection();
+            var sheetCollection = new SheetCollection();
 
             var name = "Sheet1";
 

@@ -18,6 +18,11 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// </summary>
         internal string _columnTitle { get; set; }
 
+        /// <summary>
+        /// La configuración de formato de la columna
+        /// </summary>
+        internal ColumnFormatConfigurator _columnFormat { get; set; }
+
         public ColumnConfigurator<TDataItem> Title(string title)
         {
             _columnTitle = title;
@@ -55,6 +60,18 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
                 }
                 _cellValueExpression = value;
             }
+        }
+
+
+        /// <summary>
+        /// Establece un formato para la columna
+        /// </summary>
+        /// <param name="formatConfigurator"></param>
+        internal void Format(Action<ColumnFormatConfigurator> formatConfigurator)
+        {
+            _columnFormat = new ColumnFormatConfigurator();
+            formatConfigurator.Invoke(_columnFormat);
+
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using IntNovAction.Utils.ExcelExporter.Exceptions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -35,6 +34,23 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
 
         /// <summary>
+        /// Añade una columna
+        /// </summary>
+        /// <typeparam name="TProp"></typeparam>
+        /// <param name="expression">Expresión lambda con la propiedad que se pintará en la columna</param>
+        /// <returns></returns>
+        public ColumnConfigurator<TDataItem> AddColumn<TProp>(Expression<Func<TDataItem, TProp>> expression)
+        {
+            PropertyInfo propertyInfo = ExtractPropertyInfoFromExpression(expression);
+
+            var columnConfigurator = ReflectionHelper<TDataItem>.GetColumnFromPropertyInfo(propertyInfo);
+
+            _columnCol.Add(columnConfigurator);
+
+            return columnConfigurator;
+        }
+
+        /// <summary>
         /// Añade una column
         /// </summary>
         /// <param name="sheetConfigurator">El configurador de la hoja</param>
@@ -50,22 +66,12 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return columnConfigurator;
 
         }
-
         /// <summary>
-        /// Añade una columna
+        /// Borra todas las columnas
         /// </summary>
-        /// <typeparam name="TProp"></typeparam>
-        /// <param name="expression">Expresión lambda con la propiedad que se pintará en la columna</param>
-        /// <returns></returns>
-        public ColumnConfigurator<TDataItem> AddColumn<TProp>(Expression<Func<TDataItem, TProp>> expression)
+        public void Clear()
         {
-            PropertyInfo propertyInfo = ExtractPropertyInfoFromExpression(expression);
-
-            var columnConfigurator = ReflectionHelper<TDataItem>.GetColumnFromPropertyInfo(propertyInfo);
-
-            _columnCol.Add(columnConfigurator);
-
-            return columnConfigurator;
+            _columnCol.Clear();
         }
 
         /// <summary>
@@ -84,6 +90,17 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
         }
 
+        internal ColumnConfigurator<TDataItem> AddColumn(ColumnConfigurator<TDataItem> column)
+        {
+            _columnCol.Add(column);
+            return column;
+        }
+
+        internal IList<ColumnConfigurator<TDataItem>> GetColumns()
+        {
+            return _columnCol;
+        }
+
         private PropertyInfo ExtractPropertyInfoFromExpression<TProp>(Expression<Func<TDataItem, TProp>> expression)
         {
             var body = expression.Body as MemberExpression;
@@ -94,25 +111,5 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             var propertyInfo = (PropertyInfo)body.Member;
             return propertyInfo;
         }
-
-        internal ColumnConfigurator<TDataItem> AddColumn(ColumnConfigurator<TDataItem> column)
-        {
-            _columnCol.Add(column);
-            return column;
-        }
-
-        /// <summary>
-        /// Borra todas las columnas
-        /// </summary>
-        public void Clear()
-        {
-            _columnCol.Clear();
-        }
-
-        internal IList<ColumnConfigurator<TDataItem>> GetColumns()
-        {
-            return _columnCol;
-        }
-
     }
 }

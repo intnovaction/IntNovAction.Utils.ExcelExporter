@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace IntNovAction.Utils.ExcelExporter.Tests.Integration
+namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 {
     [TestClass]
     public class ExporterTest

@@ -33,6 +33,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
             }
 
             var initRow = sheetConfig._initialRow;
+            var initColumn = sheetConfig._initialColumn;
 
             if (sheetConfig._title != null)
             {
@@ -47,12 +48,27 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 initRow++;
             }
 
+            // Formato de las columnas
+            for (var column = initColumn; column < initColumn + columns.Count; column++)
+            {
+                var columnToDisplay = columns[column - initColumn];
+                // Establecemos el formato
+                if (columnToDisplay._columnFormat != null)
+                {
+                    var style = worksheet.Columns(column, column).Style;
+                    ApplyFormat(style, columnToDisplay._columnFormat);
+                }
+            }
+
             // Formato de la cabecera (si es necesario)
             if (!sheetConfig._hideColumnHeaders)
             {
-                for (var column = initRow; column <= columns.Count; column++)
+                for (var column = initColumn; column < initColumn + columns.Count; column++)
                 {
-                    var columnToDisplay = columns[column - 1];
+                    // La columna
+                    var columnToDisplay = columns[column - initColumn];
+
+                    // Ponemos el titulo
                     var cell = worksheet.Cell(initRow, column);
                     cell.Value = columnToDisplay._columnTitle;
                 }
@@ -67,32 +83,40 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
             {
                 var rowDataItem = sheetConfig._data.ElementAt(row - initRow);
 
-                for (var column = 1; column <= columns.Count; column++)
+                for (var column = initColumn; column < initColumn + columns.Count; column++)
                 {
                     var cell = worksheet.Cell(row, column);
-                    
-                    if (columns[column - 1].Expression == null)
+                    var excelColumn = columns[column - initColumn];
+
+                    if (excelColumn.Expression == null)
                     {
-                        var propToDisplay = columns[column - 1].PropertyInfo;
+                        var propToDisplay = excelColumn.PropertyInfo;
                         cell.Value = propToDisplay.GetValue(rowDataItem);
                     }
                     else
                     {
-                        cell.Value = columns[column - 1].Expression.Invoke(rowDataItem);
+                        cell.Value = excelColumn.Expression.Invoke(rowDataItem);
                     }
                 }
 
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);
             }
+
+
+           
         }
 
+        private void ApplyFormat(IXLStyle style, ColumnFormatConfigurator configurator)
+        {
+            ApplyFormat(style, (FormatConfigurator)configurator);
+        }
 
-
-        private static void ApplyFormat(IXLStyle style, FormatConfigurator configurator)
+        private void ApplyFormat(IXLStyle style, FormatConfigurator configurator)
         {
             if (configurator._bold)
             {
                 style.Font.Bold = true;
+                style.Font.SetBold();
             }
             if (configurator._underline)
             {

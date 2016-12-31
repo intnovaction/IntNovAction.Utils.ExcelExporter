@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntNovAction.Utils.ExcelExporter.Tests.Integration
+namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 {
     [TestClass]
     public class ColumnsConfigTests
@@ -151,5 +151,49 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Integration
                 firstSheet.Cell(1, 2).Value.Should().Be(nameof(TestListItem.PropC));
             }
         }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void ColumnConfig_FormatColumn()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA).Format(f => f.Bold().Color(255, 0, 0));
+                        cols.AddColumn(prop => prop.PropB).Format(f => f.Italic());
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                var cellStyle = firstSheet.Cell(2, 1).Style;
+                cellStyle.Font.Bold.Should().BeTrue();
+                cellStyle.Font.Italic.Should().BeFalse();
+
+                cellStyle = firstSheet.Cell(3, 1).Style;
+                cellStyle.Font.Bold.Should().BeTrue();
+                cellStyle.Font.Italic.Should().BeFalse();
+
+                cellStyle = firstSheet.Cell(2, 2).Style;
+                cellStyle.Font.Bold.Should().BeFalse();
+                cellStyle.Font.Italic.Should().BeTrue();
+
+                cellStyle = firstSheet.Cell(3, 2).Style;
+                cellStyle.Font.Bold.Should().BeFalse();
+                cellStyle.Font.Italic.Should().BeTrue();
+            }
+        }
+
     }
 }
