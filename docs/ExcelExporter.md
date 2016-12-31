@@ -72,8 +72,11 @@ Para no pintar en la tabla los nombres de las columnas y que empiecen los datos 
 Podemos especificar que no se empiecen a pintar las filas en A1, sino donde queramos
 
 ```c#
-    var exporter = new Exporter()
-		.AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name").SetCoordinates(3, 2));
+var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport)
+        .Name("Sheet Name")
+        .SetCoordinates(3, 2)
+     );
         
 ```
 
@@ -153,7 +156,7 @@ Además de los formatos de fila, se puede establecer el ancho de la columna.
 	    {
             cols.Clear(); // Limpiamos todas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA);            
-            cols.AddColumn(prop => prop.PropB).Format(f => f.Bold().Italic());           
+            cols.AddColumn(prop => prop.PropB).Format(f => f.Bold().Width(50));           
         })
     );
 ```
@@ -171,4 +174,16 @@ Podemos especificar en lugar del nombre de la columna, una expresión para reali
             cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sumándole 1 y lo llamamos PropC plus 1
         })
     );
+```
+
+## Imprimir todo en una hoja
+Podemos indicar que se impriman todos los datos en una sola hoja:
+
+```c#
+var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport)
+        .Name("Sheet Name")
+        .PrintInOnePage()
+     );
+        
 ```
