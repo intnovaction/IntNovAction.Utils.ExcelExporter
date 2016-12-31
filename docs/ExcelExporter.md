@@ -136,7 +136,21 @@ Con HideColumn podemos quitar alguna de las columnas autogeneradas. Muy util cua
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
 		.Columns(cols =>
 	    {
-            cols.HideColumn(prop => prop.PropA);            
+            cols.HideColumn(prop => prop.PropA);
+        })
+    );
+```
+
+Podemos dar formato a una columna, si entra en conflicto con un formato condicional de fila, el de fila tiene preferencia.
+
+```c#
+    var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+		.Columns(cols =>
+	    {
+            cols.Clear(); // Limpiamos todoas las columnas autogeneradas
+            cols.AddColumn(prop => prop.PropA);            
+            cols.AddColumn(prop => prop.PropB).Format(f => f.Bold().Italic());           
         })
     );
 ```
