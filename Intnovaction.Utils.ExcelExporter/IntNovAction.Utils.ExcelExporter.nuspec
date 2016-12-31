@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IntNovAction.Utils.ExcelExporter</id>
-    <version>0.1.1</version>
+    <version>0.2.0</version>
     <title>$title$</title>
     <authors>IntNovAction</authors>
     <owners>$author$</owners>
@@ -10,7 +10,15 @@
     <projectUrl>https://github.com/intnovaction/IntNovAction-Utils/blob/master/docs/ExcelExporter.md</projectUrl>
     <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Utilidad para exportar a excel desde un IEnumerable tipado. Permite dar formatos condicionales a las filas en base a los valores de los elementos, específicar las columnas, transformar y formatear dinámicamente los datos, etc.</description>
+    <summary>Utilidad para exportar a excel desde un IEnumerable tipado. Permite dar formatos condicionales a las filas en base a los valores de los elementos, específicar las columnas, transformar y formatear dinámicamente los datos, etc.</summary>
+    <description>
+      Utilidad para exportar a excel desde un IEnumerable tipado.
+      Permite (entre otras cosas):
+      - Trabajar con multiples hojas.
+      - Específicar las columnas a mostrar y darles formato.
+      - Dar formatos condicionales a las filas en base a los valores de los elementos del enumerado.
+      - Transformar y formatear dinámicamente los datos.
+    </description>
     <releaseNotes>Release Inicial</releaseNotes>
     <copyright>Copyright 2016</copyright>
     <tags>c# Excel Export</tags>
