@@ -1,10 +1,6 @@
 ﻿using ClosedXML.Excel;
 using IntNovAction.Utils.ExcelExporter.Utils;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 
 namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 {
@@ -55,8 +51,8 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 // Establecemos el formato
                 if (columnToDisplay._columnFormat != null)
                 {
-                    var style = worksheet.Columns(column, column).Style;
-                    ApplyFormat(style, columnToDisplay._columnFormat);
+                    var columnToFormat = worksheet.Column(column);
+                    ApplyFormat(columnToFormat, columnToDisplay._columnFormat);
                 }
             }
 
@@ -75,7 +71,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
                 initRow++;
             }
-
 
             var finalRow = initRow + sheetConfig._data.Count();
 
@@ -98,17 +93,18 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                         cell.Value = excelColumn.Expression.Invoke(rowDataItem);
                     }
                 }
-
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);
             }
-
-
-           
         }
 
-        private void ApplyFormat(IXLStyle style, ColumnFormatConfigurator configurator)
+        private void ApplyFormat(IXLColumn column, ColumnFormatConfigurator configurator)
         {
-            ApplyFormat(style, (FormatConfigurator)configurator);
+            if (configurator._width.HasValue)
+            {
+                column.Width = configurator._width.Value;
+            }
+
+            ApplyFormat(column.Style, (FormatConfigurator)configurator);
         }
 
         private void ApplyFormat(IXLStyle style, FormatConfigurator configurator)
@@ -132,7 +128,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 style.Font.FontColor = XLColor.FromArgb(configurator._color.Red, configurator._color.Green, configurator._color.Blue);
             }
 
-
             if (configurator._fontSize.HasValue)
             {
                 style.Font.FontSize = configurator._fontSize.Value;
@@ -141,14 +136,13 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
         private void FormatRow(IXLRow excelRow, TDataItem data, SheetConfigurator<TDataItem> configurator)
         {
-            foreach (var filter in configurator._rowFormatRules)
+            foreach (var rule in configurator._rowFormatRules)
             {
-                if (filter.Item1(data))
+                if (rule.Item1(data))
                 {
-                    ApplyFormat(excelRow.Style, filter.Item2);
+                    ApplyFormat(excelRow.Style, rule.Item2);
                 }
             }
         }
-
     }
 }

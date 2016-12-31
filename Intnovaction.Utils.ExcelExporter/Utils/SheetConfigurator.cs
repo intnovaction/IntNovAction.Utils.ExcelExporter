@@ -25,7 +25,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// Los formateadores de las filas
         /// </summary>
         internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _rowFormatRules;
-
         
 
         public SheetConfigurator()

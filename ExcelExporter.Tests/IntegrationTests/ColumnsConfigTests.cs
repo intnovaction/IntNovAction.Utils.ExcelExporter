@@ -195,5 +195,36 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
             }
         }
 
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void ColumnConfig_ColumnWidth()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA).Format(f => f.Width(150));
+                        cols.AddColumn(prop => prop.PropB).Format(f => f.Width(10));
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Column(1).Width.Should().Be(150);
+                firstSheet.Column(2).Width.Should().Be(10);
+
+            }
+        }
     }
 }

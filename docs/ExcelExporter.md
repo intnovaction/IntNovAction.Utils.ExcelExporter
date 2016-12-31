@@ -1,4 +1,6 @@
-# Excel Exporter [![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
+# Excel Exporter 
+[![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Permite exportar un IEnumerable a una o varias hoja excel. Aplicando formato a las filas en base a valores de cada uno de los elementos del IEnumerable.
 
@@ -122,7 +124,7 @@ Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los m
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
 		.Columns(cols =>
 	    {
-            cols.Clear(); // Limpiamos todoas las columnas autogeneradas
+            cols.Clear(); // Limpiamos todas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA);            
             cols.AddColumn(prop => prop.PropA).Title("Prop A (2)");
         })
@@ -142,13 +144,14 @@ Con HideColumn podemos quitar alguna de las columnas autogeneradas. Muy util cua
 ```
 
 Podemos dar formato a una columna, si entra en conflicto con un formato condicional de fila, el de fila tiene preferencia.
+Además de los formatos de fila, se puede establecer el ancho de la columna.
 
 ```c#
     var exporter = new Exporter()
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
 		.Columns(cols =>
 	    {
-            cols.Clear(); // Limpiamos todoas las columnas autogeneradas
+            cols.Clear(); // Limpiamos todas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA);            
             cols.AddColumn(prop => prop.PropB).Format(f => f.Bold().Italic());           
         })
