@@ -19,7 +19,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.RowFormat)]
-        public void FormatRow_RowShouldBeFormatted()
+        public void If_I_format_a_row_Only_that_row_should_be_formatted()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -53,7 +53,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.RowFormat)]
-        public void FormatRow_RowShouldNotBeFormatted()
+        public void If_I_do_not_format_a_row_It_should_not_be_formatted()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -78,12 +78,11 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-
-                var fornFormat = firstSheet.Row(2).Cell(1).Style.Font;
-                fornFormat.Underline.Should().Be(XLFontUnderlineValues.None);
-                fornFormat.Bold.Should().Be(false);
-                fornFormat.Italic.Should().Be(false);
-                fornFormat.FontColor.Color.ToHex().Should().Be("FF000000");
+                var fontFormat = firstSheet.Row(2).Cell(1).Style.Font;
+                fontFormat.Underline.Should().Be(XLFontUnderlineValues.None);
+                fontFormat.Bold.Should().Be(false);
+                fontFormat.Italic.Should().Be(false);
+                fontFormat.FontColor.Color.ToHex().Should().Be("FF000000");
             }
 
         }

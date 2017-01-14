@@ -81,6 +81,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Categories.cs" />
+    <Compile Include="IntegrationTests\ColumnHeadersTests.cs" />
     <Compile Include="IntegrationTests\ColumnsConfigTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTests.cs" />
     <Compile Include="IntegrationTests\IntegrationTestsUtils.cs" />

@@ -16,5 +16,7 @@
 
         public const string DefaultFormat = "Default Format";
 
+        public const string ColumnHeaders = "Column Headers";
+
     }
 }

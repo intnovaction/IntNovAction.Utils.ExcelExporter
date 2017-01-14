@@ -5,21 +5,16 @@ using IntNovAction.Utils.ExcelExporter.Tests.Utils;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 {
     [TestClass]
     public class ColumnsConfigTests
     {
-
         [TestMethod]
         [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ExplicitColumns()
+        public void If_I_set_a_column_with_It_should_be_honored()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -30,8 +25,36 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     .Columns(cols =>
                     {
                         cols.Clear();
-                        cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumn(prop => prop.PropA).Title("Prop a (2)");
+                        cols.AddColumn(prop => prop.PropA).Format(f => f.Width(150));
+                        cols.AddColumn(prop => prop.PropB).Format(f => f.Width(10));
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Column(1).Width.Should().Be(150);
+                firstSheet.Column(2).Width.Should().Be(10);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void If_I_hide_a_colum_It_should_be_hidden()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.HideColumn(prop => prop.PropB);
                     })
             );
 
@@ -44,15 +67,90 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
                 firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("Prop a (2)");
+                firstSheet.Cell(1, 2).Value.Should().Be(nameof(TestListItem.PropC));
             }
         }
 
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void If_I_set_a_column_format_Only_rows_should_be_formatted()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
 
+            var sheetName = "Hoja 1";
+
+            Action<FormatConfigurator> firstColumnFormat = (f) => f.Bold().Color(255, 0, 0);
+            Action<FormatConfigurator> secondColumnFormat = (f) => f.Italic();
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA).Format(firstColumnFormat);
+                        cols.AddColumn(prop => prop.PropB).Format(secondColumnFormat);
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 1), firstColumnFormat);
+                FormatChecker.CheckFormat(firstSheet.Cell(3, 1), firstColumnFormat);
+
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
+            }
+        }
 
         [TestMethod]
         [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ExplicitColumnsWithTitle()
+        public void If_I_set_a_column_title_and_transform_It_should_be_honored()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA);
+                        cols.AddColumnExpr(prop => prop.PropC + 1, "Plus 2");
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).Value.Should().Be("Plus 2");
+
+                for (int excelRow = 2; excelRow <= items.Count + 1; excelRow++)
+                {
+                    var originalItem = items[excelRow - 2];
+
+                    var secondValue = firstSheet.Cell(excelRow, 2).Value;
+                    secondValue.CastTo<int>().Should().Be(originalItem.PropC + 1);
+                }
+
+                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
+                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 1);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void If_I_set_column_titles_They_must_be_shown()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -84,7 +182,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ExplicitColumnsWithTransform()
+        public void If_I_specify_columns_Only_those_should_be_shown()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -96,48 +194,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     {
                         cols.Clear();
                         cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumnExpr(prop => prop.PropC + 1, "Plus 2");
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-
-
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("Plus 2");
-
-                for (int excelRow = 2; excelRow <= items.Count + 1; excelRow++)
-                {
-                    var originalItem = items[excelRow - 2];
-
-                    var secondValue = firstSheet.Cell(excelRow, 2).Value;
-                    secondValue.CastTo<int>().Should().Be(originalItem.PropC + 1);
-                }
-
-                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 1);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_HideColumns()
-        {
-            var items = IntegrationTestsUtils.GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items).Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.HideColumn(prop => prop.PropB);
+                        cols.AddColumn(prop => prop.PropA).Title("Prop a (2)");
                     })
             );
 
@@ -150,76 +207,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
                 firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be(nameof(TestListItem.PropC));
-            }
-        }
-
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_FormatColumn()
-        {
-            var items = IntegrationTestsUtils.GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            Action<FormatConfigurator> firstColumnFormat = (f) => f.Bold().Color(255, 0, 0);
-            Action<FormatConfigurator> secondColumnFormat = (f) => f.Italic();
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items).Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.Clear();
-                        cols.AddColumn(prop => prop.PropA).Format(firstColumnFormat);
-                        cols.AddColumn(prop => prop.PropB).Format(secondColumnFormat);
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-
-                FormatChecker.CheckFormat(firstSheet.Cell(2, 1), firstColumnFormat);
-                FormatChecker.CheckFormat(firstSheet.Cell(3, 1), firstColumnFormat);
-
-                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
-                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
-            }
-        }
-
-
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
-        public void ColumnConfig_ColumnWidth()
-        {
-            var items = IntegrationTestsUtils.GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items).Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.Clear();
-                        cols.AddColumn(prop => prop.PropA).Format(f => f.Width(150));
-                        cols.AddColumn(prop => prop.PropB).Format(f => f.Width(10));
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-                firstSheet.Column(1).Width.Should().Be(150);
-                firstSheet.Column(2).Width.Should().Be(10);
-
+                firstSheet.Cell(1, 2).Value.Should().Be("Prop a (2)");
             }
         }
     }

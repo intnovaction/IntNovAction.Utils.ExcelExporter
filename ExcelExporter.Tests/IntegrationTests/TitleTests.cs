@@ -17,7 +17,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Title)]
-        public void ShowTitleText_Default()
+        public void If_I_do_not_set_a_title_SheetName_should_be_used()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -42,14 +42,12 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Title)]
-        public void ShowTitleText_ExplicitTitle()
+        public void If_I_set_a_sheet_title_It_should_be_used()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
             var sheetTitle = "Title";
-
-            
 
             var exporter = new Exporter()
                .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).Title(h => h.Text(sheetTitle)));
@@ -61,7 +59,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var workbook = new XLWorkbook(stream);
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
-
+                firstSheet.Name.Should().Be(sheetName);
                 firstSheet.Cell(1, 1).Value.Should().Be(sheetTitle);
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
             }
@@ -69,7 +67,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Title)]
-        public void ShowTitleText_Format()
+        public void If_I_set_a_title_format_Only_the_title_should_be_formatted()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -97,7 +95,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Title)]
-        public void ShowTitleText_Coordinates()
+        public void If_I_set_coordinates_The_title_should_be_on_that_coordinate()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 

@@ -12,7 +12,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Internals
     {
         [TestCategory(Categories.SheetCollection)]
         [TestMethod]
-        public void DuplicatedSheetName()
+        public void If_I_add_a_duplicated_sheet_name_It_should_raise_an_exception()
         {
             var sheetCollection = new SheetCollection();
 

@@ -19,7 +19,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.DefaultFormat)]
-        public void ApplyDefaultStylesTests()
+        public void If_I_apply_DefaultStyles_Title_and_headers_should_be_formatted()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 

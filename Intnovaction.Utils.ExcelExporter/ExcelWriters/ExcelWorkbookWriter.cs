@@ -17,11 +17,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
                 if (exporter._existingFileStream != null)
                 {
-                    workbook = new XLWorkbook(exporter._existingFileStream);
+                    workbook = new XLWorkbook(exporter._existingFileStream, XLEventTracking.Enabled);
                 }
                 else
                 {
-                    workbook = new XLWorkbook();
+                    workbook = new XLWorkbook(XLEventTracking.Disabled);
                 }
 
                 var orderedSheets = exporter._sheets.OrderBy(p => p._order).ToList();
@@ -48,6 +48,8 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
                 using (var ms = new MemoryStream())
                 {
+                    workbook.CalculationOnSave = false;
+                    workbook.FullCalculationOnLoad = true;                    
                     workbook.SaveAs(ms);
                     return ms.ToArray();
                 }

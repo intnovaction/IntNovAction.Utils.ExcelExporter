@@ -16,7 +16,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
     {
         [TestMethod]
         [TestCategory(Categories.PrintArea)]
-        public void ShowTitleText_PrintInOnePage_Default()
+        public void If_I_set_PrintInOnePage_It_should_include_only_used_cells()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -52,7 +52,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.PrintArea)]
-        public void ShowTitleText_PrintInOnePage_Coordinates()
+        public void If_I_set_PrintInOnePage_It_should_honor_coordinates()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 

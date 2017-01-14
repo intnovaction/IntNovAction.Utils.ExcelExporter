@@ -16,7 +16,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
     {
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void AddData()
+        public void If_I_add_data_It_should_not_fail()
         {
             var exporter = new Exporter();
 
@@ -29,10 +29,10 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void Export()
+        public void If_I_export_All_data_should_be_exported_and_title_ok()
         {
             var sheetTitle = "1-Sheet";
-            var items = IntegrationTestsUtils.GenerateItems(3);
+            var items = IntegrationTestsUtils.GenerateItems(300);
 
             var exporter = new Exporter()
                 .AddSheet<TestListItem>(c =>
@@ -55,7 +55,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void ExportWithFormat()
+        public void If_I_set_a_condtionalFormat_It_should_be_honored()
         {
             var sheetTitle = "1-Sheet";
             var items = IntegrationTestsUtils.GenerateItems(1);
@@ -63,7 +63,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
             var exporter = new Exporter()
                 .AddSheet<TestListItem>(c =>
                     c.SetData(items).Name(sheetTitle)
-                        .AddFormatRule(p => p.PropA == items.First().PropA, f => f.Bold().Italic()));
+                        .AddFormatRule(p => p.PropA == items.First().PropA, 
+                            f => f.Bold().Italic()));
 
             var result = exporter.Export();
 
@@ -79,13 +80,19 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 firstSheet.Cell(2, 1).Style.Font.Bold.Should().BeTrue();
                 firstSheet.Cell(2, 1).Style.Font.Italic.Should().BeTrue();
                 firstSheet.Cell(2, 1).Style.Font.Underline.Should().Be(XLFontUnderlineValues.None);
+
+                firstSheet.Cell(3, 1).Style.Font.Bold.Should().BeFalse();
+                firstSheet.Cell(3, 1).Style.Font.Italic.Should().BeFalse();
+                firstSheet.Cell(3, 1).Style.Font.Underline.Should().Be(XLFontUnderlineValues.None);
+
+
             }
         }
 
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void MultipleDataSheet()
+        public void If_I_export_multiple_datasets_All_sheets_should_be_created()
         {
             var sheet1Name = "Hoja 1";
             var sheet2Name = "Hoja 2";
@@ -120,7 +127,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void UseExistingExcel()
+        public void If_I_use_an_existing_excel_It_should_use_the_origina_sheet()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
@@ -151,14 +158,16 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void SetCoordinates()
+        public void If_I_set_coordinates_Data_should_start_in_place()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).SetCoordinates(3, 2));
+               .AddSheet<TestListItem>(c => c.SetData(items)
+                .Name(sheetName)
+                .SetCoordinates(3, 2));
 
             var result = exporter.Export();
 
@@ -170,30 +179,6 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 firstSheet.Cell(1, 1).Value.Should().Be(string.Empty);
                 firstSheet.Cell(3, 2).Value.Should().NotBeNull();
-            }
-        }
-
-        [TestMethod]
-        [TestCategory(Categories.Integration)]
-        public void HideColumnHeaders()
-        {
-            var items = IntegrationTestsUtils.GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideColumnHeaders());
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-                firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count);
-
             }
         }
 
