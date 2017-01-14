@@ -1,6 +1,5 @@
 ﻿namespace IntNovAction.Utils.ExcelExporter.Utils
 {
-
     /// <summary>
     /// Configura un formato para un rango de celdas
     /// </summary>
@@ -12,6 +11,7 @@
         internal int? _fontSize = null;
         internal bool _italic = false;
         internal bool _underline = false;
+
         public FormatConfigurator Bold()
         {
             return Bold(true);

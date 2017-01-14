@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
 {
@@ -28,10 +28,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             {
                 _columnCol = _columnCol.OrderBy(p => p._orderFromMetadata).ToList();
             }
-            
         }
-
-
 
         /// <summary>
         /// Añade una columna
@@ -64,8 +61,8 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _columnCol.Add(columnConfigurator);
 
             return columnConfigurator;
-
         }
+
         /// <summary>
         /// Borra todas las columnas
         /// </summary>
@@ -87,7 +84,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _columnCol.RemoveAll(p => p.PropertyInfo != null && p.PropertyInfo.Name == propertyInfo.Name);
 
             return;
-
         }
 
         internal ColumnConfigurator<TDataItem> AddColumn(ColumnConfigurator<TDataItem> column)

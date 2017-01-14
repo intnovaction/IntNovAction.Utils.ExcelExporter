@@ -9,7 +9,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     public class SheetConfigurator<TDataItem> : SheetConfiguratorBase
         where TDataItem : new()
     {
-
         /// <summary>
         /// La información de las columnas
         /// </summary>
@@ -20,12 +19,10 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// </summary>
         internal IEnumerable<TDataItem> _data;
 
-
         /// <summary>
         /// Los formateadores de las filas
         /// </summary>
         internal List<Tuple<Func<TDataItem, bool>, FormatConfigurator>> _rowFormatRules;
-        
 
         public SheetConfigurator()
         {
@@ -50,39 +47,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         }
 
         /// <summary>
-        /// Configura las columnas de la hoja
-        /// </summary>
-        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
-        /// <param name="config">Expresión para trabajar la coleccion de columnas</param>
-        /// <returns>Exportador</returns>
-        public SheetConfigurator<TDataItem> Columns(Action<ColumnCollection<TDataItem>> config)
-        {
-            config.Invoke(_columnsConfig);
-            return this;
-        }
-
-
-        /// <summary>
-        /// Indica que no se muestren los headers de las columnas
-        /// </summary>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> HideColumnHeaders()
-        {           
-            return HideColumnHeaders(true);
-        }
-
-
-        /// <summary>
-        /// Indica que se oculten o no los headers de las columnas
-        /// </summary>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> HideColumnHeaders(bool value)
-        {
-            _hideColumnHeaders = value;
-            return this;
-        }
-
-        /// <summary>
         /// Indica que se apliquen los estilos por defecto
         /// </summary>
         /// <returns></returns>
@@ -98,6 +62,37 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         public SheetConfigurator<TDataItem> ApplyDefaultStyles(bool value)
         {
             _applyDefaultStyle = value;
+            return this;
+        }
+
+        /// <summary>
+        /// Configura las columnas de la hoja
+        /// </summary>
+        /// <typeparam name="TDataItem">El tipo de datos que se va a poner en la hoja</typeparam>
+        /// <param name="config">Expresión para trabajar la coleccion de columnas</param>
+        /// <returns>Exportador</returns>
+        public SheetConfigurator<TDataItem> Columns(Action<ColumnCollection<TDataItem>> config)
+        {
+            config.Invoke(_columnsConfig);
+            return this;
+        }
+
+        /// <summary>
+        /// Indica que no se muestren los headers de las columnas
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> HideColumnHeaders()
+        {
+            return HideColumnHeaders(true);
+        }
+
+        /// <summary>
+        /// Indica que se oculten o no los headers de las columnas
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> HideColumnHeaders(bool value)
+        {
+            _hideColumnHeaders = value;
             return this;
         }
 
@@ -120,6 +115,16 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         public SheetConfigurator<TDataItem> Order(int order)
         {
             _order = order;
+            return this;
+        }
+
+        /// <summary>
+        /// Imprime la hoja en una sola página
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> PrintInOnePage()
+        {
+            _fitInOnePage = true;
             return this;
         }
 
@@ -151,6 +156,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             _data = data;
             return this;
         }
+
         /// <summary>
         /// Establece la cabecera de la hoja
         /// </summary>
@@ -165,7 +171,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             config.Invoke(configurator);
 
             this._title = configurator;
-
 
             return this;
         }
@@ -182,16 +187,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             this._title = configurator;
             _title.Text(_name);
 
-            return this;
-        }
-
-        /// <summary>
-        /// Imprime la hoja en una sola página
-        /// </summary>
-        /// <returns></returns>
-        public SheetConfigurator<TDataItem> PrintInOnePage()
-        {
-            _fitInOnePage = true;
             return this;
         }
     }

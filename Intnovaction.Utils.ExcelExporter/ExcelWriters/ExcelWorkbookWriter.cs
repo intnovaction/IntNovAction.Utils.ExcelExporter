@@ -13,8 +13,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             try
             {
-               
-
                 if (exporter._existingFileStream != null)
                 {
                     workbook = new XLWorkbook(exporter._existingFileStream, XLEventTracking.Enabled);
@@ -40,7 +38,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                     genericType.InvokeMember("WriteSheet",
                         System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public,
                         Type.DefaultBinder, sheetExporter, new object[] { workbook, sheetConfigurator });
-
                 }
 
                 workbook.Properties.Created = DateTime.Now;
@@ -49,7 +46,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 using (var ms = new MemoryStream())
                 {
                     workbook.CalculationOnSave = false;
-                    workbook.FullCalculationOnLoad = true;                    
+                    workbook.FullCalculationOnLoad = true;
                     workbook.SaveAs(ms);
                     return ms.ToArray();
                 }

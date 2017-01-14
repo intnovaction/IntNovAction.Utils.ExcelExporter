@@ -2,19 +2,13 @@
 using FluentAssertions;
 using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 {
     [TestClass]
     public class TitleTests
     {
-
         [TestMethod]
         [TestCategory(Categories.Title)]
         public void If_I_do_not_set_a_title_SheetName_should_be_used()
@@ -38,7 +32,6 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
             }
         }
-
 
         [TestMethod]
         [TestCategory(Categories.Title)]
@@ -73,7 +66,6 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
             var sheetName = "Hoja 1";
 
-
             var exporter = new Exporter()
                .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName)
                 .Title(t => t.Format(f => f.Bold()))
@@ -103,7 +95,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
             var exporter = new Exporter()
                .AddSheet<TestListItem>(c => c.SetData(items)
-                    .SetCoordinates(2,3)
+                    .SetCoordinates(2, 3)
                     .Name(sheetName)
                     .Title(t => t.Text(sheetName)));
 

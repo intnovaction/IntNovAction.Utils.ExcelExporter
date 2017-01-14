@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
 {
@@ -14,36 +10,25 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     public class ColumnConfigurator<TDataItem>
     {
         /// <summary>
-        /// Nombre a mostrar en la columna
+        /// En caso de que se utilice una expresión para poner un valor a la celda, la expresión
         /// </summary>
-        internal string _columnTitle { get; set; }
+        private Func<TDataItem, object> _cellValueExpression = null;
 
         /// <summary>
         /// La configuración de formato de la columna
         /// </summary>
         internal ColumnFormatConfigurator _columnFormat { get; set; }
 
-        public ColumnConfigurator<TDataItem> Title(string title)
-        {
-            _columnTitle = title;
-            return this;
-        }
+        /// <summary>
+        /// Nombre a mostrar en la columna
+        /// </summary>
+        internal string _columnTitle { get; set; }
 
         // TODO: Refactor, si solo se usa para montarlo.. no deberia estar ahi
         /// <summary>
         /// Orden que se saca de los metadatos. Luego no se usa!
         /// </summary>
         internal int _orderFromMetadata { get; set; }
-
-        /// <summary>
-        /// Propiedad de la clase correspondiente a la columna. Si es una expresión, es nula
-        /// </summary>
-        internal PropertyInfo PropertyInfo { get; set; }
-
-        /// <summary>
-        /// En caso de que se utilice una expresión para poner un valor a la celda, la expresión
-        /// </summary>
-        private Func<TDataItem, object> _cellValueExpression = null;
 
         internal Func<TDataItem, object> Expression
         {
@@ -62,6 +47,16 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             }
         }
 
+        /// <summary>
+        /// Propiedad de la clase correspondiente a la columna. Si es una expresión, es nula
+        /// </summary>
+        internal PropertyInfo PropertyInfo { get; set; }
+
+        public ColumnConfigurator<TDataItem> Title(string title)
+        {
+            _columnTitle = title;
+            return this;
+        }
 
         /// <summary>
         /// Establece un formato para la columna
@@ -71,7 +66,6 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         {
             _columnFormat = new ColumnFormatConfigurator();
             formatConfigurator.Invoke(_columnFormat);
-
         }
     }
 }

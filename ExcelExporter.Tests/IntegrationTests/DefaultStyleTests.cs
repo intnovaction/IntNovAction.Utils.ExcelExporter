@@ -1,22 +1,15 @@
 ﻿using ClosedXML.Excel;
-using FluentAssertions;
 using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
 using IntNovAction.Utils.ExcelExporter.Tests.Utils;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 {
     [TestClass]
     public class DefaultStyleTests
     {
-
         [TestMethod]
         [TestCategory(Categories.DefaultFormat)]
         public void If_I_apply_DefaultStyles_Title_and_headers_should_be_formatted()
@@ -49,10 +42,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 {
                     FormatChecker.CheckFormat(firstSheet.Cell(2, i), headerDefaultStyle);
                 }
-
             }
         }
-
-
     }
 }

@@ -19,7 +19,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             {
                 throw new DuplicatedSheetNameException(sheetConfigurator._name);
             }
-            
+
             base.Add(sheetConfigurator);
         }
     }

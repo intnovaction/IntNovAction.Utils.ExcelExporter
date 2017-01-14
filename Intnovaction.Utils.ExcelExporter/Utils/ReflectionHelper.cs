@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntNovAction.Utils.ExcelExporter.Utils
 {
     internal static class ReflectionHelper<TDataItem>
     {
-
         internal static ColumnConfigurator<TDataItem> GetColumnFromPropertyInfo(PropertyInfo prop)
         {
             ColumnConfigurator<TDataItem> dataItem = null;

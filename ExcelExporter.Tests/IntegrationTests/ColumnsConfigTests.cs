@@ -14,36 +14,6 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
     {
         [TestMethod]
         [TestCategory(Categories.ColumnsConfig)]
-        public void If_I_set_a_column_with_It_should_be_honored()
-        {
-            var items = IntegrationTestsUtils.GenerateItems(3);
-
-            var sheetName = "Hoja 1";
-
-            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
-                sheet.SetData(items).Name(sheetName)
-                    .Columns(cols =>
-                    {
-                        cols.Clear();
-                        cols.AddColumn(prop => prop.PropA).Format(f => f.Width(150));
-                        cols.AddColumn(prop => prop.PropB).Format(f => f.Width(10));
-                    })
-            );
-
-            var result = exporter.Export();
-
-            using (var stream = new MemoryStream(result))
-            {
-                var workbook = new XLWorkbook(stream);
-                var firstSheet = workbook.Worksheets.Worksheet(1);
-
-                firstSheet.Column(1).Width.Should().Be(150);
-                firstSheet.Column(2).Width.Should().Be(10);
-            }
-        }
-
-        [TestMethod]
-        [TestCategory(Categories.ColumnsConfig)]
         public void If_I_hide_a_colum_It_should_be_hidden()
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
@@ -108,7 +78,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
 
                 for (int i = 3; i <= 5; i++)
-                {                    
+                {
                     FormatChecker.CheckFormat(firstSheet.Cell(i, 1), firstColumnFormat);
                     FormatChecker.CheckFormat(firstSheet.Cell(i, 2), secondColumnFormat);
                 }
@@ -157,6 +127,36 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 1);
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void If_I_set_a_column_with_It_should_be_honored()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items).Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA).Format(f => f.Width(150));
+                        cols.AddColumn(prop => prop.PropB).Format(f => f.Width(10));
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.Column(1).Width.Should().Be(150);
+                firstSheet.Column(2).Width.Should().Be(10);
             }
         }
 

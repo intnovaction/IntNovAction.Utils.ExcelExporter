@@ -4,7 +4,6 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.TestObjects
 {
     public class TestListItem
     {
-
         public const string PropATitle = "Pepe";
 
         [Display(Name = PropATitle, Order = 2)]

@@ -1,7 +1,6 @@
 ﻿using ClosedXML.Excel;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System.Linq;
-using System;
 
 namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 {
@@ -14,8 +13,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
         public void WriteSheet(XLWorkbook workbook, SheetConfigurator<TDataItem> sheetConfig)
         {
-            
-
             var columns = sheetConfig._columnsConfig.GetColumns();
 
             IXLWorksheet worksheet = null;
@@ -33,8 +30,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             if (sheetConfig._title != null)
             {
-
-
                 var cell = worksheet.Cell(initRow, initColumn);
                 cell.SetValue(sheetConfig._title._TitleText);
 
@@ -50,8 +45,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
                 initRow++;
             }
-
-           
 
             // Textos de la cabecera (si es necesario)
             if (!sheetConfig._hideColumnHeaders)
@@ -88,7 +81,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                     ApplyFormat(columnToFormat, firstRowWithData, lastRowWithData, columnToDisplay._columnFormat);
                 }
             }
-            
+
             for (var row = initRow; row < lastRowWithData; row++)
             {
                 var rowDataItem = sheetConfig._data.ElementAt(row - initRow);
@@ -116,7 +109,6 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 worksheet.PageSetup.PrintAreas.Add(sheetConfig._initialRow, sheetConfig._initialColumn, lastRowWithData, initColumn + columns.Count);
             }
         }
-
 
         /// <summary>
         /// Aplica un formato a una columan de datos
@@ -181,6 +173,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
         }
 
         #region Default Style Formatters
+
         private void ApplyHeaderCellDefaultStyle(IXLCell cell)
         {
             ApplyFormat(cell.Style, Utils.DefaultStyles.GetHeadersDefaultStyle());
@@ -190,7 +183,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
         {
             ApplyFormat(cell.Style, Utils.DefaultStyles.GetTitleDefaultStyle());
         }
-        #endregion
 
+        #endregion Default Style Formatters
     }
 }

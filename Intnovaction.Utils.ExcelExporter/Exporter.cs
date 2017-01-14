@@ -45,7 +45,6 @@ namespace IntNovAction.Utils.ExcelExporter
             configurator._order = this._sheets.Count;
             this._sheets.Add(configurator);
 
-
             return this;
         }
 

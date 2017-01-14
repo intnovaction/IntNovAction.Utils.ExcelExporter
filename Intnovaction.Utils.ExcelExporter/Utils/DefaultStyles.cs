@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IntNovAction.Utils.ExcelExporter.Utils
+﻿namespace IntNovAction.Utils.ExcelExporter.Utils
 {
     internal class DefaultStyles
     {
-        internal static FormatConfigurator GetTitleDefaultStyle()
+        internal static FormatConfigurator GetCellDefaultStyle()
         {
             var formatConfig = new FormatConfigurator()
-                .Bold()
-                .Italic()
-                .FontSize(18);
+                .Bold(false)
+                .Italic(false)
+                .BottomBorder(false)
+                .Color(0, 0, 0)
+                .FontSize(11);
 
             return formatConfig;
         }
@@ -28,15 +24,12 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return formatConfig;
         }
 
-
-        internal static FormatConfigurator GetCellDefaultStyle()
+        internal static FormatConfigurator GetTitleDefaultStyle()
         {
             var formatConfig = new FormatConfigurator()
-                .Bold(false)
-                .Italic(false)
-                .BottomBorder(false)
-                .Color(0, 0, 0)
-                .FontSize(11);
+                .Bold()
+                .Italic()
+                .FontSize(18);
 
             return formatConfig;
         }
