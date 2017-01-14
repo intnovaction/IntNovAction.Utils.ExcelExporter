@@ -88,6 +88,7 @@ Podemos establecer condiciones (reglas de formato a nivel de fila) en forma de e
 - Underline
 - Color
 - FontSize
+- BottomBorder
 
 Si el valor de PropC es 3, entonces haz la fila en negrita y cursiva:
 
