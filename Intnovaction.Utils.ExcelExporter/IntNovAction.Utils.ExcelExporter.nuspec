@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>IntNovAction.Utils.ExcelExporter</id>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <title>$title$</title>
     <authors>IntNovAction</authors>
     <owners>$author$</owners>
@@ -20,7 +20,7 @@
       - Transformar y formatear dinámicamente los datos.
     </description>
     <releaseNotes>Release Inicial</releaseNotes>
-    <copyright>Copyright 2016</copyright>
+    <copyright>Copyright 2017</copyright>
     <tags>c# Excel Export</tags>
   </metadata>
 </package>
