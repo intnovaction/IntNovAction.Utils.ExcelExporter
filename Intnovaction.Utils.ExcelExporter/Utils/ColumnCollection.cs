@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntNovAction.Utils.ExcelExporter.Configurators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,7 +16,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
         public ColumnCollection()
         {
-            _columnCol = new List<Utils.ColumnConfigurator<TDataItem>>();
+            _columnCol = new List<ColumnConfigurator<TDataItem>>();
 
             var type = typeof(TDataItem);
             var allProps = type.GetProperties();
@@ -56,7 +57,7 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             var columnConfigurator = new ColumnConfigurator<TDataItem>();
 
             columnConfigurator.Expression = expr;
-            columnConfigurator._columnTitle = title;
+            columnConfigurator._columnHeaderFormat.Text(title);
             columnConfigurator._orderFromMetadata = int.MaxValue;
             _columnCol.Add(columnConfigurator);
 

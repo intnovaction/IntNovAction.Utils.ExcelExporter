@@ -1,4 +1,6 @@
-﻿namespace IntNovAction.Utils.ExcelExporter.Utils
+﻿using IntNovAction.Utils.ExcelExporter.Configurators;
+
+namespace IntNovAction.Utils.ExcelExporter.Utils
 {
     internal class DefaultStyles
     {

@@ -1,12 +1,12 @@
-﻿namespace IntNovAction.Utils.ExcelExporter.Utils
+﻿namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     /// <summary>
     /// Configurador del formato de una columna.
     /// Se aplica ese formato antes del de las filas, que tiene prioridad
     /// </summary>
-    public class ColumnFormatConfigurator : FormatConfigurator
+    public class ColumnDataFormatConfigurator : FormatConfigurator
     {
-        internal double? _width;
+        internal double? _width { get; private set; }
 
         /// <summary>
         /// Establece el ancho de la columna

@@ -58,7 +58,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
         [TestMethod]
         [TestCategory(Categories.Integration)]
-        public void If_I_export_Mustshow_title_and_headers_and_all_data_should_be_exported()
+        public void If_I_export_Mustshow_SheetTitle_and_headers_and_all_data_should_be_exported()
         {
             var sheetTitle = "1-Sheet";
             var items = IntegrationTestsUtils.GenerateItems(300);

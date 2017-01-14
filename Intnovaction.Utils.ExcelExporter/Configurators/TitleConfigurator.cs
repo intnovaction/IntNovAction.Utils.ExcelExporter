@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace IntNovAction.Utils.ExcelExporter.Utils
+namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     public class TitleConfigurator
     {
-        internal FormatConfigurator _Format;
-        internal string _TitleText;
+        internal FormatConfigurator _Format { private set; get; }
+        internal string _TitleText { private set; get; }
 
         public TitleConfigurator Format(Action<FormatConfigurator> formatConfigurator)
         {

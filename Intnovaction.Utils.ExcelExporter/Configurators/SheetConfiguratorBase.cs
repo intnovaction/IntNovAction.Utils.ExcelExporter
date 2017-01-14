@@ -1,4 +1,4 @@
-﻿namespace IntNovAction.Utils.ExcelExporter.Utils
+﻿namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     /// <summary>
     /// Tiene que haber una clase base para poder manejar la colección

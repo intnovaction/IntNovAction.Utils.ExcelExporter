@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IntNovAction.Utils.ExcelExporter.Configurators;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
@@ -14,19 +15,19 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             {
                 dataItem = new ColumnConfigurator<TDataItem>()
                 {
-                    _columnTitle = attr.GetName() ?? prop.Name,
                     _orderFromMetadata = attr.GetOrder() ?? int.MaxValue,
                     PropertyInfo = prop,
                 };
+                dataItem._columnHeaderFormat.Text(attr.GetName() ?? prop.Name);
             }
             else
             {
                 dataItem = new ColumnConfigurator<TDataItem>()
                 {
-                    _columnTitle = prop.Name,
                     _orderFromMetadata = Int16.MaxValue,
                     PropertyInfo = prop,
                 };
+                dataItem._columnHeaderFormat.Text(prop.Name);
             }
 
             return dataItem;

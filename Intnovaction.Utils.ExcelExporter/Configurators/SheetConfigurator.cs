@@ -1,7 +1,8 @@
-﻿using System;
+﻿using IntNovAction.Utils.ExcelExporter.Utils;
+using System;
 using System.Collections.Generic;
 
-namespace IntNovAction.Utils.ExcelExporter.Utils
+namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     /// <summary>
     /// Configurador de una hoja

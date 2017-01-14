@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using IntNovAction.Utils.ExcelExporter.Configurators;
 using IntNovAction.Utils.ExcelExporter.Exceptions;
 using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
 using IntNovAction.Utils.ExcelExporter.Utils;

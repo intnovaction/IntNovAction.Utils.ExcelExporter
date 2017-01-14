@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace IntNovAction.Utils.ExcelExporter.Utils
+namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     /// <summary>
     /// La configuración de una columna
@@ -9,20 +9,24 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
     /// <typeparam name="TDataItem">El parametro del item del que se va a pintar la columna</typeparam>
     public class ColumnConfigurator<TDataItem>
     {
+        public ColumnConfigurator()
+        {
+            _columnHeaderFormat = new ColumnHeaderConfigurator();
+        }
+
         /// <summary>
         /// En caso de que se utilice una expresión para poner un valor a la celda, la expresión
         /// </summary>
         private Func<TDataItem, object> _cellValueExpression = null;
 
+        internal ColumnHeaderConfigurator _columnHeaderFormat;
+
         /// <summary>
         /// La configuración de formato de la columna
         /// </summary>
-        internal ColumnFormatConfigurator _columnFormat { get; set; }
+        internal ColumnDataFormatConfigurator _columnFormat { get; set; }
 
-        /// <summary>
-        /// Nombre a mostrar en la columna
-        /// </summary>
-        internal string _columnTitle { get; set; }
+
 
         // TODO: Refactor, si solo se usa para montarlo.. no deberia estar ahi
         /// <summary>
@@ -52,9 +56,9 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// </summary>
         internal PropertyInfo PropertyInfo { get; set; }
 
-        public ColumnConfigurator<TDataItem> Title(string title)
+        public ColumnConfigurator<TDataItem> Header(string title)
         {
-            _columnTitle = title;
+            _columnHeaderFormat.Text(title);
             return this;
         }
 
@@ -62,10 +66,18 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
         /// Establece un formato para la columna
         /// </summary>
         /// <param name="formatConfigurator"></param>
-        internal void Format(Action<ColumnFormatConfigurator> formatConfigurator)
+        public void DataFormat(Action<ColumnDataFormatConfigurator> formatConfigurator)
         {
-            _columnFormat = new ColumnFormatConfigurator();
+            _columnFormat = new ColumnDataFormatConfigurator();
             formatConfigurator.Invoke(_columnFormat);
         }
+
+        public ColumnConfigurator<TDataItem> Header(Action<ColumnHeaderConfigurator> headerConfigurator)
+        {
+            headerConfigurator.Invoke(_columnHeaderFormat);
+
+            return this;
+        }
+
     }
 }

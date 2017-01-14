@@ -21,9 +21,10 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
             var exporter = new Exporter()
                .AddSheet<TestListItem>(
                     c => c.SetData(items)
+                        .Title()
                         .ApplyDefaultStyles()
                         .Name(sheetName)
-                        .Title());
+                        );
 
             var result = exporter.Export();
 

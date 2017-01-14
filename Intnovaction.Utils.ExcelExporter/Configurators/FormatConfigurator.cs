@@ -1,16 +1,16 @@
-﻿namespace IntNovAction.Utils.ExcelExporter.Utils
+﻿namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     /// <summary>
     /// Configura un formato para un rango de celdas
     /// </summary>
     public class FormatConfigurator
     {
-        internal bool _bold = false;
-        internal bool _bottomBorder;
-        internal ColorInfo _color;
-        internal int? _fontSize = null;
-        internal bool _italic = false;
-        internal bool _underline = false;
+        internal bool _bold { private set; get; } = false;
+        internal bool _bottomBorder { private set; get; } = false;
+        internal ColorInfo _color { private set; get; } = null;
+        internal int? _fontSize { private set; get; } = null;
+        internal bool _italic { private set; get; } = false;
+        internal bool _underline { private set; get; } = false;
 
         public FormatConfigurator Bold()
         {

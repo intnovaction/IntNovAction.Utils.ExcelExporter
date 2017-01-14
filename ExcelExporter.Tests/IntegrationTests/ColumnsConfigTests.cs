@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using FluentAssertions;
+using IntNovAction.Utils.ExcelExporter.Configurators;
 using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
 using IntNovAction.Utils.ExcelExporter.Tests.Utils;
 using IntNovAction.Utils.ExcelExporter.Utils;
@@ -57,8 +58,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     .Columns(cols =>
                     {
                         cols.Clear();
-                        cols.AddColumn(prop => prop.PropA).Format(firstColumnFormat);
-                        cols.AddColumn(prop => prop.PropB).Format(secondColumnFormat);
+                        cols.AddColumn(prop => prop.PropA).DataFormat(firstColumnFormat);
+                        cols.AddColumn(prop => prop.PropB).DataFormat(secondColumnFormat);
                     })
             );
 
@@ -143,8 +144,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     .Columns(cols =>
                     {
                         cols.Clear();
-                        cols.AddColumn(prop => prop.PropA).Format(f => f.Width(150));
-                        cols.AddColumn(prop => prop.PropB).Format(f => f.Width(10));
+                        cols.AddColumn(prop => prop.PropA).DataFormat(f => f.Width(150));
+                        cols.AddColumn(prop => prop.PropB).DataFormat(f => f.Width(10));
                     })
             );
 
@@ -175,7 +176,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     {
                         cols.Clear();
                         cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumn(prop => prop.PropA).Title("PropC Inc");
+                        cols.AddColumn(prop => prop.PropA).Header("PropC Inc");
                     })
             );
 
@@ -206,7 +207,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     {
                         cols.Clear();
                         cols.AddColumn(prop => prop.PropA);
-                        cols.AddColumn(prop => prop.PropA).Title("Prop a (2)");
+                        cols.AddColumn(prop => prop.PropA).Header("Prop a (2)");
                     })
             );
 
@@ -222,5 +223,43 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 firstSheet.Cell(1, 2).Value.Should().Be("Prop a (2)");
             }
         }
+
+        [TestMethod]
+        [TestCategory(Categories.ColumnsConfig)]
+        public void If_I_set_header_format_They_must_be_honored()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
+                sheet.SetData(items)
+                    .Name(sheetName)
+                    .Columns(cols =>
+                    {
+                        cols.Clear();
+                        cols.AddColumn(prop => prop.PropA).Header(t => t.Format(f => f.Bold()));
+                        cols.AddColumn(prop => prop.PropA).Header(t => t.Text("PropC Inc").Format(f => f.Italic()));
+                    })
+            );
+
+            var result = exporter.Export();
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(1);
+
+                firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
+
+                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 1).Style.Font.Bold.Should().Be(true, "should be bold");
+
+                firstSheet.Cell(1, 2).Value.Should().Be("PropC Inc");
+                firstSheet.Cell(1, 2).Style.Font.Italic.Should().Be(true, "should be italic");
+            }
+        }
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using IntNovAction.Utils.ExcelExporter.ExcelWriters;
+﻿using IntNovAction.Utils.ExcelExporter.Configurators;
+using IntNovAction.Utils.ExcelExporter.ExcelWriters;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System;
 using System.IO;

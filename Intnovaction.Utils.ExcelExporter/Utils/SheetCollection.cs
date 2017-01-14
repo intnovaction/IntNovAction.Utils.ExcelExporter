@@ -1,4 +1,5 @@
-﻿using IntNovAction.Utils.ExcelExporter.Exceptions;
+﻿using IntNovAction.Utils.ExcelExporter.Configurators;
+using IntNovAction.Utils.ExcelExporter.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 

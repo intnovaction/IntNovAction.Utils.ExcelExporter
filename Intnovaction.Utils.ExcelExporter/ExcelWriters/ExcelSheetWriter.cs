@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using IntNovAction.Utils.ExcelExporter.Configurators;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System.Linq;
 
@@ -56,11 +57,15 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
                     // Ponemos el titulo
                     var cell = worksheet.Cell(initRow, column);
-                    cell.Value = columnToDisplay._columnTitle;
+                    cell.Value = columnToDisplay._columnHeaderFormat._text;
 
                     if (sheetConfig._applyDefaultStyle)
                     {
                         ApplyHeaderCellDefaultStyle(cell);
+                    }
+                    if (columnToDisplay._columnHeaderFormat._Format != null)
+                    {
+                        ApplyFormat(cell.Style, columnToDisplay._columnHeaderFormat._Format);
                     }
                 }
 
@@ -117,7 +122,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
         /// <param name="firstRow">Primera fila con datos</param>
         /// <param name="lastRow">Ultima fila con datos</param>
         /// <param name="configurator">El formato</param>
-        private void ApplyFormat(IXLColumn column, int firstRow, int lastRow, ColumnFormatConfigurator configurator)
+        private void ApplyFormat(IXLColumn column, int firstRow, int lastRow, ColumnDataFormatConfigurator configurator)
         {
             if (configurator._width.HasValue)
             {

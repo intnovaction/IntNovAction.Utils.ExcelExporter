@@ -128,8 +128,22 @@ Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los met
 		.Columns(cols =>
 	    {
             cols.Clear(); // Limpiamos todas las columnas autogeneradas
-            cols.AddColumn(prop => prop.PropA);            
-            cols.AddColumn(prop => prop.PropA).Title("Prop A (2)");
+            cols.AddColumn(prop => prop.PropA);
+            cols.AddColumn(prop => prop.PropA).Header("Prop A (2)");
+        })
+    );
+```
+
+También podemos dar formato a las cabeceras de las columnas
+```c#
+    var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
+		.Columns(cols =>
+	    {
+            cols.Clear(); // Limpiamos todas las columnas autogeneradas
+            cols.AddColumn(prop => prop.PropA)
+			    .Header(h => h.Text("PropC Inc").Format(f => f.Italic()))
+			;
         })
     );
 ```
@@ -156,7 +170,7 @@ Además de los formatos de fila, se puede establecer el ancho de la columna.
 	    {
             cols.Clear(); // Limpiamos todas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA);            
-            cols.AddColumn(prop => prop.PropB).Format(f => f.Bold().Width(50));           
+            cols.AddColumn(prop => prop.PropB).DataFormat(f => f.Bold().Width(50));           
         })
     );
 ```
