@@ -61,13 +61,43 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
             return this;
         }
 
+
         /// <summary>
         /// Indica que no se muestren los headers de las columnas
         /// </summary>
         /// <returns></returns>
         public SheetConfigurator<TDataItem> HideColumnHeaders()
+        {           
+            return HideColumnHeaders(true);
+        }
+
+
+        /// <summary>
+        /// Indica que se oculten o no los headers de las columnas
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> HideColumnHeaders(bool value)
         {
-            _hideColumnHeaders = true;
+            _hideColumnHeaders = value;
+            return this;
+        }
+
+        /// <summary>
+        /// Indica que se apliquen los estilos por defecto
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> ApplyDefaultStyles()
+        {
+            return ApplyDefaultStyles(true);
+        }
+
+        /// <summary>
+        /// Indica que se apliquen o no los estilos por defecto
+        /// </summary>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> ApplyDefaultStyles(bool value)
+        {
+            _applyDefaultStyle = value;
             return this;
         }
 

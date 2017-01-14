@@ -99,9 +99,9 @@ Si el valor de PropC es 3, entonces haz la fila en negrita y cursiva:
 		);
 ```
 
-## Establecer un titulo en la hoja
+## Establecer un título en la hoja
 
-Podemos establecer un titulo por defecto en la parte superior
+Podemos establecer un título por defecto en la parte superior
 
 ```c#
     var exporter = new Exporter()
@@ -162,7 +162,7 @@ Además de los formatos de fila, se puede establecer el ancho de la columna.
 ```
 
 ## Modificar los datos a mostrar mediante expresiones
-Podemos especificar en lugar del nombre de la columna, una expresión para realizar transformaciones a los datos. Hay que especificar el titulo de la columna.
+Podemos especificar en lugar del nombre de la columna, una expresión para realizar transformaciones a los datos. Hay que especificar el título de la columna.
 
 ```c#
     var exporter = new Exporter()
@@ -174,6 +174,18 @@ Podemos especificar en lugar del nombre de la columna, una expresión para realiz
             cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sumándole 1 y lo llamamos PropC plus 1
         })
     );
+```
+## Formato por defecto
+
+Si no queremos dar formato a la hoja a mano podemos indicar que se haga un formato por defecto (título y cabecera)
+
+```c#
+var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport)
+        .Name("Sheet Name")
+        .ApplyDefaultStyles()
+     );
+        
 ```
 
 ## Imprimir todo en una hoja

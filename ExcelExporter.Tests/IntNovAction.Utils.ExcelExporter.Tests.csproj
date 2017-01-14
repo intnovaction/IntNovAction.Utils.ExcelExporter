@@ -86,10 +86,12 @@
     <Compile Include="IntegrationTests\IntegrationTestsUtils.cs" />
     <Compile Include="IntegrationTests\PrintAreaTests.cs" />
     <Compile Include="IntegrationTests\RowFormatTests.cs" />
+    <Compile Include="IntegrationTests\DefaultStyleTests.cs" />
     <Compile Include="IntegrationTests\TitleTests.cs" />
     <Compile Include="Internals\SheetCollectionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestObjects\TestListItem.cs" />
+    <Compile Include="Utils\FormatChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Intnovaction.Utils.ExcelExporter\IntNovAction.Utils.ExcelExporter.csproj">

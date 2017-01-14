@@ -11,6 +11,7 @@
         internal int? _fontSize = null;
         internal bool _italic = false;
         internal bool _underline = false;
+        internal bool _bottomBorder;
 
         /// <summary>
         /// La info de color a poner
@@ -57,6 +58,12 @@
         public FormatConfigurator Underline()
         {
             _underline = true;
+            return this;
+        }
+
+        public FormatConfigurator BottomBorder()
+        {
+            _bottomBorder = true;
             return this;
         }
     }

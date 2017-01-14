@@ -13,6 +13,8 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             try
             {
+               
+
                 if (exporter._existingFileStream != null)
                 {
                     workbook = new XLWorkbook(exporter._existingFileStream);
@@ -40,6 +42,9 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                         Type.DefaultBinder, sheetExporter, new object[] { workbook, sheetConfigurator });
 
                 }
+
+                workbook.Properties.Created = DateTime.Now;
+                workbook.Properties.Comments = "Created with IntNovAction ExcelExporter";
 
                 using (var ms = new MemoryStream())
                 {

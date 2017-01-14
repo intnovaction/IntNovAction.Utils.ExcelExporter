@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using System.Linq;
+using System;
 
 namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 {
@@ -32,8 +33,15 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             if (sheetConfig._title != null)
             {
+
+
                 var cell = worksheet.Cell(initRow, initColumn);
                 cell.SetValue(sheetConfig._title._TitleText);
+
+                if (sheetConfig._applyDefaultStyle)
+                {
+                    ApplyTitleDefaultStyle(cell);
+                }
 
                 if (sheetConfig._title._Format != null)
                 {
@@ -55,7 +63,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 }
             }
 
-            // Formato de la cabecera (si es necesario)
+            // Textos de la cabecera (si es necesario)
             if (!sheetConfig._hideColumnHeaders)
             {
                 for (var column = initColumn; column < initColumn + columns.Count; column++)
@@ -66,10 +74,17 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                     // Ponemos el titulo
                     var cell = worksheet.Cell(initRow, column);
                     cell.Value = columnToDisplay._columnTitle;
+
+                    if (sheetConfig._applyDefaultStyle)
+                    {
+                        ApplyHeaderCellDefaultStyle(cell);
+                    }
                 }
 
                 initRow++;
             }
+
+
 
             var finalRow = initRow + sheetConfig._data.Count();
 
@@ -100,6 +115,8 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 worksheet.PageSetup.PrintAreas.Add(sheetConfig._initialRow, sheetConfig._initialColumn, finalRow, initColumn + columns.Count);
             }
         }
+
+
 
         private void ApplyFormat(IXLColumn column, ColumnFormatConfigurator configurator)
         {
@@ -136,6 +153,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
             {
                 style.Font.FontSize = configurator._fontSize.Value;
             }
+
+            if (configurator._bottomBorder)
+            {
+                style.Border.BottomBorder = XLBorderStyleValues.Medium;
+            }
         }
 
         private void FormatRow(IXLRow excelRow, TDataItem data, SheetConfigurator<TDataItem> configurator)
@@ -148,5 +170,18 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 }
             }
         }
+
+        #region Default Style Formatters
+        private void ApplyHeaderCellDefaultStyle(IXLCell cell)
+        {
+            ApplyFormat(cell.Style, Utils.DefaultStyles.GetHeadersDefaultStyle());
+        }
+
+        private void ApplyTitleDefaultStyle(IXLCell cell)
+        {
+            ApplyFormat(cell.Style, Utils.DefaultStyles.GetTitleDefaultStyle());
+        }
+        #endregion
+
     }
 }

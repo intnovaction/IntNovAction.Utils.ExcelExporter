@@ -20,5 +20,7 @@
         internal TitleConfigurator _title = null;
 
         internal bool _fitInOnePage = false;
+
+        internal bool _applyDefaultStyle = false;
     }
 }

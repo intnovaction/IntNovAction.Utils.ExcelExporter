@@ -2,17 +2,19 @@
 {
     public class Categories
     {
-        public const string Integration = "Excel Exporter - Integration";
+        public const string Integration = "Integration";
 
-        public const string RowFormat = "Excel Exporter - Integration - Row Format";
+        public const string RowFormat = "Integration - Row Format";
 
-        public const string Title = "Excel Exporter - Integration - Title";
+        public const string Title = "Integration - Title";
 
-        public const string SheetCollection = "Excel Exporter - SheetCollection";
+        public const string SheetCollection = "SheetCollection";
 
-        public const string ColumnsConfig = "Excel Exporter - ColumnsConfig";
+        public const string ColumnsConfig = "ColumnsConfig";
 
-        public const string PrintArea = "Excel Exporter - Print area";
+        public const string PrintArea = "Print area";
+
+        public const string DefaultFormat = "Default Format";
 
     }
 }

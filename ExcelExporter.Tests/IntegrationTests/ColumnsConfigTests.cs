@@ -1,6 +1,8 @@
 ﻿using ClosedXML.Excel;
 using FluentAssertions;
 using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
+using IntNovAction.Utils.ExcelExporter.Tests.Utils;
+using IntNovAction.Utils.ExcelExporter.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -160,13 +162,16 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
             var sheetName = "Hoja 1";
 
+            Action<FormatConfigurator> firstColumnFormat = (f) => f.Bold().Color(255, 0, 0);
+            Action<FormatConfigurator> secondColumnFormat = (f) => f.Italic();
+
             var exporter = new Exporter().AddSheet<TestListItem>(sheet =>
                 sheet.SetData(items).Name(sheetName)
                     .Columns(cols =>
                     {
                         cols.Clear();
-                        cols.AddColumn(prop => prop.PropA).Format(f => f.Bold().Color(255, 0, 0));
-                        cols.AddColumn(prop => prop.PropB).Format(f => f.Italic());
+                        cols.AddColumn(prop => prop.PropA).Format(firstColumnFormat);
+                        cols.AddColumn(prop => prop.PropB).Format(secondColumnFormat);
                     })
             );
 
@@ -177,21 +182,12 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var workbook = new XLWorkbook(stream);
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-                var cellStyle = firstSheet.Cell(2, 1).Style;
-                cellStyle.Font.Bold.Should().BeTrue();
-                cellStyle.Font.Italic.Should().BeFalse();
 
-                cellStyle = firstSheet.Cell(3, 1).Style;
-                cellStyle.Font.Bold.Should().BeTrue();
-                cellStyle.Font.Italic.Should().BeFalse();
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 1), firstColumnFormat);
+                FormatChecker.CheckFormat(firstSheet.Cell(3, 1), firstColumnFormat);
 
-                cellStyle = firstSheet.Cell(2, 2).Style;
-                cellStyle.Font.Bold.Should().BeFalse();
-                cellStyle.Font.Italic.Should().BeTrue();
-
-                cellStyle = firstSheet.Cell(3, 2).Style;
-                cellStyle.Font.Bold.Should().BeFalse();
-                cellStyle.Font.Italic.Should().BeTrue();
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
             }
         }
 
