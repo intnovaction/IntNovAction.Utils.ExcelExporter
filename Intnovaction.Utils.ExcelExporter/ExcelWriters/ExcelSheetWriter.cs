@@ -14,7 +14,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
         public void WriteSheet(XLWorkbook workbook, SheetConfigurator<TDataItem> sheetConfig)
         {
-            var _classPropInfo = sheetConfig._columnsConfig;
+            
 
             var columns = sheetConfig._columnsConfig.GetColumns();
 
@@ -51,17 +51,7 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 initRow++;
             }
 
-            // Formato de las columnas
-            for (var column = initColumn; column < initColumn + columns.Count; column++)
-            {
-                var columnToDisplay = columns[column - initColumn];
-                // Establecemos el formato
-                if (columnToDisplay._columnFormat != null)
-                {
-                    var columnToFormat = worksheet.Column(column);
-                    ApplyFormat(columnToFormat, columnToDisplay._columnFormat);
-                }
-            }
+           
 
             // Textos de la cabecera (si es necesario)
             if (!sheetConfig._hideColumnHeaders)
@@ -84,11 +74,22 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 initRow++;
             }
 
+            var firstRowWithData = initRow;
+            var lastRowWithData = initRow + sheetConfig._data.Count();
 
-
-            var finalRow = initRow + sheetConfig._data.Count();
-
-            for (var row = initRow; row < finalRow; row++)
+            // Formato de las columnas
+            for (var column = initColumn; column < initColumn + columns.Count; column++)
+            {
+                var columnToDisplay = columns[column - initColumn];
+                // Establecemos el formato
+                if (columnToDisplay._columnFormat != null)
+                {
+                    var columnToFormat = worksheet.Column(column);
+                    ApplyFormat(columnToFormat, firstRowWithData, lastRowWithData, columnToDisplay._columnFormat);
+                }
+            }
+            
+            for (var row = initRow; row < lastRowWithData; row++)
             {
                 var rowDataItem = sheetConfig._data.ElementAt(row - initRow);
 
@@ -112,20 +113,28 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             if (sheetConfig._fitInOnePage)
             {
-                worksheet.PageSetup.PrintAreas.Add(sheetConfig._initialRow, sheetConfig._initialColumn, finalRow, initColumn + columns.Count);
+                worksheet.PageSetup.PrintAreas.Add(sheetConfig._initialRow, sheetConfig._initialColumn, lastRowWithData, initColumn + columns.Count);
             }
         }
 
 
-
-        private void ApplyFormat(IXLColumn column, ColumnFormatConfigurator configurator)
+        /// <summary>
+        /// Aplica un formato a una columan de datos
+        /// </summary>
+        /// <param name="column">La columna (para poner el ancho)</param>
+        /// <param name="firstRow">Primera fila con datos</param>
+        /// <param name="lastRow">Ultima fila con datos</param>
+        /// <param name="configurator">El formato</param>
+        private void ApplyFormat(IXLColumn column, int firstRow, int lastRow, ColumnFormatConfigurator configurator)
         {
             if (configurator._width.HasValue)
             {
                 column.Width = configurator._width.Value;
             }
 
-            ApplyFormat(column.Style, (FormatConfigurator)configurator);
+            var range = column.Cells(firstRow, lastRow);
+
+            ApplyFormat(range.Style, (FormatConfigurator)configurator);
         }
 
         private void ApplyFormat(IXLStyle style, FormatConfigurator configurator)

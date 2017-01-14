@@ -11,38 +11,38 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Utils
 {
     class FormatChecker
     {
-        public static void CheckFormat(IXLCell appliedFormat, FormatConfigurator theoricFormat)
+        public static void CheckFormat(IXLCell cellToCheck, FormatConfigurator theoricFormat)
         {
-            appliedFormat.Style.Font.Bold.Should().Be(theoricFormat._bold);
-            appliedFormat.Style.Font.Italic.Should().Be(theoricFormat._italic);
+            cellToCheck.Style.Font.Bold.Should().Be(theoricFormat._bold, "Incorrect bold");
+            cellToCheck.Style.Font.Italic.Should().Be(theoricFormat._italic, "Incorrect Italic");
 
             var underline = theoricFormat._underline ? XLFontUnderlineValues.Single : XLFontUnderlineValues.None;
-            appliedFormat.Style.Font.Underline.Should().Be(underline);
+            cellToCheck.Style.Font.Underline.Should().Be(underline, "Incorrect underline");
 
             if (theoricFormat._fontSize.HasValue)
             {
-                appliedFormat.Style.Font.FontSize.Should().Be(theoricFormat._fontSize);
+                cellToCheck.Style.Font.FontSize.Should().Be(theoricFormat._fontSize);
             }
 
             if (theoricFormat._color != null)
             {
-                appliedFormat.Style.Font.FontColor.Color.R.Should().Be((byte)theoricFormat._color.Red);
-                appliedFormat.Style.Font.FontColor.Color.G.Should().Be((byte)theoricFormat._color.Green);
-                appliedFormat.Style.Font.FontColor.Color.B.Should().Be((byte)theoricFormat._color.Blue);
+                cellToCheck.Style.Font.FontColor.Color.R.Should().Be((byte)theoricFormat._color.Red);
+                cellToCheck.Style.Font.FontColor.Color.G.Should().Be((byte)theoricFormat._color.Green);
+                cellToCheck.Style.Font.FontColor.Color.B.Should().Be((byte)theoricFormat._color.Blue);
             }
 
             var border = theoricFormat._bottomBorder ? XLBorderStyleValues.Medium : XLBorderStyleValues.None;
-            appliedFormat.Style.Border.BottomBorder.Should().Be(border);
+            cellToCheck.Style.Border.BottomBorder.Should().Be(border);
 
         }
 
 
-        public static void CheckFormat(IXLCell appliedFormat, Action<FormatConfigurator> formatAction)
+        public static void CheckFormat(IXLCell cellToCheck, Action<FormatConfigurator> formatAction)
         {
             var formatConfig = new FormatConfigurator();
             formatAction.Invoke(formatConfig);
 
-            CheckFormat(appliedFormat, formatConfig);
+            CheckFormat(cellToCheck, formatConfig);
         }
     }
 }

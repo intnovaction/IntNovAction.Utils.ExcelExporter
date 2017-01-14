@@ -27,5 +27,18 @@ namespace IntNovAction.Utils.ExcelExporter.Utils
 
             return formatConfig;
         }
+
+
+        internal static FormatConfigurator GetCellDefaultStyle()
+        {
+            var formatConfig = new FormatConfigurator()
+                .Bold(false)
+                .Italic(false)
+                .BottomBorder(false)
+                .Color(0, 0, 0)
+                .FontSize(11);
+
+            return formatConfig;
+        }
     }
 }

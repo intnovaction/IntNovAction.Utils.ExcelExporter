@@ -99,11 +99,23 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var workbook = new XLWorkbook(stream);
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-                FormatChecker.CheckFormat(firstSheet.Cell(2, 1), firstColumnFormat);
-                FormatChecker.CheckFormat(firstSheet.Cell(3, 1), firstColumnFormat);
+                // Titulo
+                FormatChecker.CheckFormat(firstSheet.Cell(1, 1), DefaultStyles.GetCellDefaultStyle());
+                FormatChecker.CheckFormat(firstSheet.Cell(1, 2), DefaultStyles.GetCellDefaultStyle());
 
+                // Cabecera
+                FormatChecker.CheckFormat(firstSheet.Cell(2, 1), firstColumnFormat);
                 FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
-                FormatChecker.CheckFormat(firstSheet.Cell(2, 2), secondColumnFormat);
+
+                for (int i = 3; i <= 5; i++)
+                {                    
+                    FormatChecker.CheckFormat(firstSheet.Cell(i, 1), firstColumnFormat);
+                    FormatChecker.CheckFormat(firstSheet.Cell(i, 2), secondColumnFormat);
+                }
+
+                // Fila de despues
+                FormatChecker.CheckFormat(firstSheet.Cell(6, 1), DefaultStyles.GetCellDefaultStyle());
+                FormatChecker.CheckFormat(firstSheet.Cell(6, 2), DefaultStyles.GetCellDefaultStyle());
             }
         }
 
