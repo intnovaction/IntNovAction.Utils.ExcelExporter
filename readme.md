@@ -169,7 +169,7 @@ Podemos especificar en lugar del nombre de la columna, una expresión para realiz
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
 		.Columns(cols =>
 	    {
-            cols.Clear(); // Limpiamos todoas las columnas autogeneradas
+            cols.Clear(); // Limpiamos todas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA); // Mostramos la columna PropA
             cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sumándole 1 y lo llamamos PropC plus 1
         })
