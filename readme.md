@@ -1,6 +1,7 @@
 # Excel Exporter 
 [![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/intnovaction/IntNovAction.Utils.ExcelExporter?svg=true)](https://ci.appveyor.com/project/IntNovAction/intnovaction-utils-excelexporter)
 
 Permite exportar un IEnumerable a una o varias hoja excel. Aplicando formato a las filas en base a valores de cada uno de los elementos del IEnumerable.
 
@@ -36,7 +37,7 @@ Creamos un IEnumerable con items de esa clase...
 ```
 
 Configuramos el excel, creando una hoja, con un nombre e indicando los datos a pintar.
-La librería leerá los metadatos de la clase, creando las columnas con el nombre indicado en los atributos.
+La librerÃ­a leerÃ¡ los metadatos de la clase, creando las columnas con el nombre indicado en los atributos.
 
 ```c#
     var exporter = new Exporter()
@@ -47,9 +48,9 @@ Por ultimo exportamos el excel
 
     var result = exporter.Export();
 
-## Crear múltiples hojas
+## Crear mÃºltiples hojas
 
-Para crear múltiples hojas con múltiples sets de datos llamamos varias veces a AddSheet:
+Para crear mÃºltiples hojas con mÃºltiples sets de datos llamamos varias veces a AddSheet:
 
 ```c#
     var exporter = new Exporter()
@@ -100,9 +101,9 @@ Si el valor de PropC es 3, entonces haz la fila en negrita y cursiva:
 		);
 ```
 
-## Establecer un título en la hoja
+## Establecer un tÃ­tulo en la hoja
 
-Podemos establecer un título por defecto en la parte superior
+Podemos establecer un tÃ­tulo por defecto en la parte superior
 
 ```c#
     var exporter = new Exporter()
@@ -120,7 +121,7 @@ O personalizarlo con un texto, formato, etc.
     );
 ```
 ## Especificar las columnas a mostrar
-Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los metadatos del atributo Display de la propiedad (si se utiliza) se tendrán en cuenta.
+Mediante la colecciÃ³n columns podemos aÃ±adir, ocultar o quitar columnas. Los metadatos del atributo Display de la propiedad (si se utiliza) se tendrÃ¡n en cuenta.
 
 
 ```c#
@@ -135,7 +136,7 @@ Mediante la colección columns podemos añadir, ocultar o quitar columnas. Los met
     );
 ```
 
-También podemos dar formato a las cabeceras de las columnas
+TambiÃ©n podemos dar formato a las cabeceras de las columnas
 ```c#
     var exporter = new Exporter()
     .AddSheet<TestListItem>(c => c.SetData(dataToExport).Name("Sheet Name")
@@ -162,7 +163,7 @@ Con HideColumn podemos quitar alguna de las columnas autogeneradas. Muy util cua
 ```
 
 Podemos dar formato a una columna, si entra en conflicto con un formato condicional de fila, el de fila tiene preferencia.
-Además de los formatos de fila, se puede establecer el ancho de la columna.
+AdemÃ¡s de los formatos de fila, se puede establecer el ancho de la columna.
 
 ```c#
     var exporter = new Exporter()
@@ -177,7 +178,7 @@ Además de los formatos de fila, se puede establecer el ancho de la columna.
 ```
 
 ## Modificar los datos a mostrar mediante expresiones
-Podemos especificar en lugar del nombre de la columna, una expresión para realizar transformaciones a los datos. Hay que especificar el título de la columna.
+Podemos especificar en lugar del nombre de la columna, una expresiÃ³n para realizar transformaciones a los datos. Hay que especificar el tÃ­tulo de la columna.
 
 ```c#
     var exporter = new Exporter()
@@ -186,13 +187,13 @@ Podemos especificar en lugar del nombre de la columna, una expresión para realiz
 	    {
             cols.Clear(); // Limpiamos todas las columnas autogeneradas
             cols.AddColumn(prop => prop.PropA); // Mostramos la columna PropA
-            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sumándole 1 y lo llamamos PropC plus 1
+            cols.AddColumnExpr(prop => prop.PropC + 1, "PropC plus 1"); // Mostramos el contenido de PropC sumÃ¡ndole 1 y lo llamamos PropC plus 1
         })
     );
 ```
 ## Formato por defecto
 
-Si no queremos dar formato a la hoja a mano podemos indicar que se haga un formato por defecto (título y cabecera)
+Si no queremos dar formato a la hoja a mano podemos indicar que se haga un formato por defecto (tÃ­tulo y cabecera)
 
 ```c#
 var exporter = new Exporter()
