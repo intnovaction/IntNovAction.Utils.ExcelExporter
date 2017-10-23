@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>IntNovAction.Utils.ExcelExporter</id>
-    <version>0.3.0</version>
+    <version>1.0.0</version>
     <title>$title$</title>
     <authors>IntNovAction</authors>
     <owners>$author$</owners>
@@ -19,7 +19,7 @@
       - Dar formatos condicionales a las filas en base a los valores de los elementos del enumerado.
       - Transformar y formatear dinámicamente los datos.
     </description>
-    <releaseNotes>Release Inicial</releaseNotes>
+    <releaseNotes>Cambio a netstandar. Uso de OpenXml preview. OJO!</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>c# Excel Export</tags>
   </metadata>

@@ -148,7 +148,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
         {
             var items = IntegrationTestsUtils.GenerateItems(3);
 
-            var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporter.Tests.Test.xlsx");
+            var excelFileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("IntNovAction.Utils.ExcelExporterTests.Test.xlsx");
 
             var exporter = new Exporter(excelFileStream)
                .AddSheet<TestListItem>(c => c.SetData(items));

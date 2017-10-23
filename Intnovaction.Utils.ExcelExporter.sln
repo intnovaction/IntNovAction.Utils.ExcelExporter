@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntNovAction.Utils.ExcelExporter", "Intnovaction.Utils.ExcelExporter\IntNovAction.Utils.ExcelExporter.csproj", "{6F05EE3A-47F9-4C20-AC11-6713EB791858}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntNovAction.Utils.ExcelExporter.Tests", "ExcelExporter.Tests\IntNovAction.Utils.ExcelExporter.Tests.csproj", "{CE658A96-50DE-4AC9-8E26-52EE80FF4183}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E24B9156-09BF-4F49-9E96-0B051CFD92A2}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
 		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntNovAction.Utils.ExcelExporter", "IntNovAction.Utils.ExcelExporter.Std\IntNovAction.Utils.ExcelExporter.csproj", "{E395F576-B048-4D36-9D83-16B203A0C3A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntNovAction.Utils.ExcelExporterTests", "IntNovAction.Utils.ExcelExporterTests.Std\IntNovAction.Utils.ExcelExporterTests.csproj", "{1DF77904-0DF0-42EF-90B5-8FBF29F0BF99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{46601E56-50DC-4D71-B95E-B928ED83A3C5}"
+	ProjectSection(SolutionItems) = preProject
+		libs\ClosedXML.dll = libs\ClosedXML.dll
 	EndProjectSection
 EndProject
 Global
@@ -19,16 +24,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6F05EE3A-47F9-4C20-AC11-6713EB791858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F05EE3A-47F9-4C20-AC11-6713EB791858}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F05EE3A-47F9-4C20-AC11-6713EB791858}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F05EE3A-47F9-4C20-AC11-6713EB791858}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE658A96-50DE-4AC9-8E26-52EE80FF4183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE658A96-50DE-4AC9-8E26-52EE80FF4183}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE658A96-50DE-4AC9-8E26-52EE80FF4183}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE658A96-50DE-4AC9-8E26-52EE80FF4183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E395F576-B048-4D36-9D83-16B203A0C3A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E395F576-B048-4D36-9D83-16B203A0C3A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E395F576-B048-4D36-9D83-16B203A0C3A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E395F576-B048-4D36-9D83-16B203A0C3A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF77904-0DF0-42EF-90B5-8FBF29F0BF99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF77904-0DF0-42EF-90B5-8FBF29F0BF99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF77904-0DF0-42EF-90B5-8FBF29F0BF99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF77904-0DF0-42EF-90B5-8FBF29F0BF99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CDF05AA4-8042-4B95-8623-3DCD9BD11F67}
 	EndGlobalSection
 EndGlobal
