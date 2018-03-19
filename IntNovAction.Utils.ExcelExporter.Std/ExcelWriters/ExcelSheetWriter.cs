@@ -155,7 +155,12 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 style.Font.FontColor = XLColor.FromArgb(configurator._color.Red, configurator._color.Green, configurator._color.Blue);
             }
 
-            if (configurator._fontSize.HasValue)
+            if (configurator._backcolor != null)
+            {
+                style.Fill.BackgroundColor = XLColor.FromArgb(configurator._backcolor.Red, configurator._backcolor.Green, configurator._backcolor.Blue);
+            }
+
+                if (configurator._fontSize.HasValue)
             {
                 style.Font.FontSize = configurator._fontSize.Value;
             }

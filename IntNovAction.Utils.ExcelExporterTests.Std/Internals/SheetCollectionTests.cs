@@ -29,7 +29,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Internals
 
             Action action = () => sheetCollection.Add(duplicateNameSheetConfig);
 
-            action.ShouldThrow<DuplicatedSheetNameException>()
+            action.Should().Throw<DuplicatedSheetNameException>()
                 .Where(p => p.DuplicatedName == name);
         }
     }

@@ -29,6 +29,14 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.Utils
                 fontStyle.FontColor.Color.B.Should().Be((byte)theoricFormat._color.Blue);
             }
 
+            if (theoricFormat._backcolor != null)
+            {
+                cellToCheck.Style.Fill.BackgroundColor.Color.B.Should().Be((byte)theoricFormat._backcolor.Blue);
+                cellToCheck.Style.Fill.BackgroundColor.Color.G.Should().Be((byte)theoricFormat._backcolor.Green);
+                cellToCheck.Style.Fill.BackgroundColor.Color.R.Should().Be((byte)theoricFormat._backcolor.Red);
+            }
+
+
             var border = theoricFormat._bottomBorder ? XLBorderStyleValues.Medium : XLBorderStyleValues.None;
             cellToCheck.Style.Border.BottomBorder.Should().Be(border);
         }

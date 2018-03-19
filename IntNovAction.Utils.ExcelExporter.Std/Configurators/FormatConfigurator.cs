@@ -5,9 +5,12 @@
     /// </summary>
     public class FormatConfigurator
     {
+
         internal bool _bold { private set; get; } = false;
         internal bool _bottomBorder { private set; get; } = false;
         internal ColorInfo _color { private set; get; } = null;
+        internal ColorInfo _backcolor { private set; get; } = null;
+
         internal int? _fontSize { private set; get; } = null;
         internal bool _italic { private set; get; } = false;
         internal bool _underline { private set; get; } = false;
@@ -37,6 +40,13 @@
         public FormatConfigurator Color(int red, int green, int blue)
         {
             _color = new ColorInfo(red, green, blue);
+
+            return this;
+        }
+
+        public FormatConfigurator BackgroundColor(int red, int green, int blue)
+        {
+            _backcolor = new ColorInfo(red, green, blue);
 
             return this;
         }

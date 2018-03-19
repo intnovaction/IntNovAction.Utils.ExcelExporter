@@ -60,7 +60,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
              f.Bold()
             .Italic()
             .Underline()
-            .Color(255, 0, 0);
+            .Color(255, 0, 0)
+            .BackgroundColor(0,255,0);
 
             var exporter = new Exporter()
                .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideColumnHeaders()
