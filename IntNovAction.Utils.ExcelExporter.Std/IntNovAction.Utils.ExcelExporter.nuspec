@@ -19,7 +19,7 @@
       - Dar formatos condicionales a las filas en base a los valores de los elementos del enumerado.
       - Transformar y formatear dinámicamente los datos.
     </description>
-    <releaseNotes>Cambio a netstandard. Uso de OpenXml preview. OJO!</releaseNotes>
+    <releaseNotes>Cambio a netstandard. Actualización de paquetes.</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>c# Excel Export</tags>
   </metadata>

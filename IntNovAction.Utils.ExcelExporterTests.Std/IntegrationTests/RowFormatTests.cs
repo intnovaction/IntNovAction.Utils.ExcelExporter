@@ -6,6 +6,7 @@ using IntNovAction.Utils.ExcelExporter.Tests.Utils;
 using IntNovAction.Utils.ExcelExporter.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Drawing;
 using System.IO;
 
 namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
@@ -40,11 +41,17 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
+                
+
                 var fontFormat = firstSheet.Row(2).Cell(1).Style.Font;
                 fontFormat.Underline.Should().Be(XLFontUnderlineValues.None);
                 fontFormat.Bold.Should().Be(false);
                 fontFormat.Italic.Should().Be(false);
-                fontFormat.FontColor.Color.ToHex().Should().Be("FF000000");
+
+                var color = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
+                fontFormat.FontColor.Color.ToArgb().Should().Be(color.ToArgb());
+
+                
             }
         }
 

@@ -122,8 +122,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 {
                     var originalItem = items[excelRow - 2];
 
-                    var secondValue = firstSheet.Cell(excelRow, 2).Value;
-                    secondValue.CastTo<int>().Should().Be(originalItem.PropC + 1);
+                    var secondValue = firstSheet.Cell(excelRow, 2).GetDouble();
+                    secondValue.Should().Be(originalItem.PropC + 1);
                 }
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
