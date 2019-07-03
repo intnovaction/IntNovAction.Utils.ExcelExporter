@@ -27,7 +27,7 @@
     <RepositoryUrl>https://github.com/intnovaction/IntNovAction.Utils.ExcelExporter</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.0.0</Version>
+    <Version>2.01</Version>
     <PackageTags>c# Excel Export dotnet core ClosedXml</PackageTags>
   </PropertyGroup>
 
@@ -36,11 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.93.1" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.1" />
-    <PackageReference Include="FastMember.Signed" Version="1.4.1" />
+    <PackageReference Include="ClosedXML" Version="0.94.2" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.9.1" />
+    <PackageReference Include="FastMember.Signed" Version="1.5.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="System.IO.Packaging" Version="4.5.0" />
   </ItemGroup>
 
