@@ -14,8 +14,8 @@
       - Específicar las columnas a mostrar y darles formato.
       - Dar formatos condicionales a las filas en base a los valores de los elementos del enumerado.
       - Transformar y formatear dinámicamente los datos.</Description>
-    <AssemblyVersion>0.4.0.0</AssemblyVersion>
-    <FileVersion>0.4.0.0</FileVersion>
+    <AssemblyVersion>0.4.0.1</AssemblyVersion>
+    <FileVersion>0.4.0.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,7 +27,7 @@
     <RepositoryUrl>https://github.com/intnovaction/IntNovAction.Utils.ExcelExporter</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>2.01</Version>
+    <Version>2.2.0</Version>
     <PackageTags>c# Excel Export dotnet core ClosedXml</PackageTags>
   </PropertyGroup>
 
@@ -36,12 +36,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.94.2" />
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.9.1" />
+    <PackageReference Include="ClosedXML" Version="0.95.3" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.11.3" />
     <PackageReference Include="FastMember.Signed" Version="1.5.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
-    <PackageReference Include="System.IO.Packaging" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="System.IO.Packaging" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
