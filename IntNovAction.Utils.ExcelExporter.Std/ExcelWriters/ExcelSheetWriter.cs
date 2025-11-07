@@ -99,11 +99,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                     if (excelColumn.Expression == null)
                     {
                         var propToDisplay = excelColumn.PropertyInfo;
-                        cell.Value = propToDisplay.GetValue(rowDataItem);
+                        cell.Value = XLCellValue.FromObject(propToDisplay.GetValue(rowDataItem));
                     }
                     else
                     {
-                        cell.Value = excelColumn.Expression.Invoke(rowDataItem);
+                        cell.Value = XLCellValue.FromObject(excelColumn.Expression.Invoke(rowDataItem));
                     }
                 }
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);

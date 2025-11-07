@@ -137,7 +137,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-                firstSheet.Cell(1, 1).Value.Should().Be(string.Empty);
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(string.Empty);
                 firstSheet.Cell(3, 2).Value.Should().NotBeNull();
             }
         }

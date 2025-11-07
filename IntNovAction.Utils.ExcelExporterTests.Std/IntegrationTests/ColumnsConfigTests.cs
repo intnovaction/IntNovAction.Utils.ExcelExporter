@@ -37,8 +37,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be(nameof(TestListItem.PropC));
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).GetValue<string>().Should().Be(nameof(TestListItem.PropC));
             }
         }
 
@@ -115,8 +115,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var workbook = new XLWorkbook(stream);
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("Plus 2");
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).GetValue<string>().Should().Be("Plus 2");
 
                 for (int excelRow = 2; excelRow <= items.Count + 1; excelRow++)
                 {
@@ -188,8 +188,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("PropC Inc");
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).GetValue<string>().Should().Be("PropC Inc");
             }
         }
 
@@ -219,8 +219,8 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
-                firstSheet.Cell(1, 2).Value.Should().Be("Prop a (2)");
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 2).GetValue<string>().Should().Be("Prop a (2)");
             }
         }
 
@@ -252,10 +252,10 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 firstSheet.LastColumnUsed().ColumnNumber().Should().Be(2);
 
-                firstSheet.Cell(1, 1).Value.Should().Be(TestListItem.PropATitle);
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(TestListItem.PropATitle);
                 firstSheet.Cell(1, 1).Style.Font.Bold.Should().Be(true, "should be bold");
 
-                firstSheet.Cell(1, 2).Value.Should().Be("PropC Inc");
+                firstSheet.Cell(1, 2).GetValue<string>().Should().Be("PropC Inc");
                 firstSheet.Cell(1, 2).Style.Font.Italic.Should().Be(true, "should be italic");
             }
         }

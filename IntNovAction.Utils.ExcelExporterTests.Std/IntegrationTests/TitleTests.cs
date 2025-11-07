@@ -28,7 +28,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-                firstSheet.Cell(1, 1).Value.Should().Be(sheetName);
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(sheetName);
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
             }
         }
@@ -53,7 +53,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
                 firstSheet.Name.Should().Be(sheetName);
-                firstSheet.Cell(1, 1).Value.Should().Be(sheetTitle);
+                firstSheet.Cell(1, 1).GetValue<string>().Should().Be(sheetTitle);
                 firstSheet.LastRowUsed().RowNumber().Should().Be(items.Count + 2);
             }
         }
@@ -107,7 +107,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 var firstSheet = workbook.Worksheets.Worksheet(1);
 
-                firstSheet.Cell(2, 3).Value.Should().Be(sheetName);
+                firstSheet.Cell(2, 3).GetValue<string>().Should().Be(sheetName);
             }
         }
     }

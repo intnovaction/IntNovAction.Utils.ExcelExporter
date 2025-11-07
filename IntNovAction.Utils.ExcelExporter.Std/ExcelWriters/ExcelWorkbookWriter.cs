@@ -15,11 +15,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
             {
                 if (exporter._existingFileStream != null)
                 {
-                    workbook = new XLWorkbook(exporter._existingFileStream, XLEventTracking.Enabled);
+                    workbook = new XLWorkbook(exporter._existingFileStream);
                 }
                 else
                 {
-                    workbook = new XLWorkbook(XLEventTracking.Disabled);
+                    workbook = new XLWorkbook();
                 }
 
                 var orderedSheets = exporter._sheets.OrderBy(p => p._order).ToList();
