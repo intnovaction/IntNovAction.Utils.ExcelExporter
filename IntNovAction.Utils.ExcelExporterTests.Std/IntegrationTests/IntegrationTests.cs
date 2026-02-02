@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using FluentAssertions;
 using IntNovAction.Utils.ExcelExporter.Tests.TestObjects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -169,6 +170,41 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
 
                 firstSheet.LastRowUsed().RowNumber()
                     .Should().Be(items.Count + 1, $"el excel de ejemplo tiene cabecera y hay {items.Count} datos");
+            }
+        }
+
+        [TestMethod]
+        [TestCategory(Categories.Integration)]
+        public void If_I_add_a_custom_cell_it_should_be_added()
+        {
+            var items = IntegrationTestsUtils.GenerateItems(3);
+
+            var sheetName = "Hoja 1";
+
+            var exporter = new Exporter()
+               .AddSheet<TestListItem>(
+                    c => c.SetData(items)
+                          .Name(sheetName)
+                          .SetCustomContent(2, 1, "Custom Cell Content")
+                          //.SetCustomContent(3, 1, "oOrmatted Content", format => format.Bold().Italic())
+                          .SetCoordinates(4, 1)
+               );
+
+            var result = exporter.Export();
+
+            // Guardar el archivo para inspección visual
+            var outputPath = Path.Combine(Path.GetTempPath(), "CustomCellTest.xlsx");
+            File.WriteAllBytes(outputPath, result);
+            System.Diagnostics.Debug.WriteLine($"Excel guardado en: {outputPath}");
+
+            using (var stream = new MemoryStream(result))
+            {
+                var workbook = new XLWorkbook(stream);
+                var firstSheet = workbook.Worksheets.Worksheet(sheetName);
+
+                firstSheet.Cell(2, 1).GetValue<string>().Should().Be("Custom Cell Content");
+                firstSheet.Cell(3, 1).GetValue<string>().Should().Be(string.Empty);
+                firstSheet.Cell(4, 1).Value.Should().NotBeNull();
             }
         }
     }

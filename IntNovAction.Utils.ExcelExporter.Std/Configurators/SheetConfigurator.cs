@@ -190,5 +190,27 @@ namespace IntNovAction.Utils.ExcelExporter.Configurators
 
             return this;
         }
+
+        /// <summary>
+        /// Establece el contenido de una celda personalizada
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> SetCustomContent(int row, int column, string value)
+        {
+            if (row < 1 || column < 1)
+                throw new ArgumentOutOfRangeException("The minimum coordinates are 1, 1");
+
+            _customCells.Add(new CustomCell
+            {
+                Row = row,
+                Column = column,
+                Value = value
+            });
+
+            return this;
+        }
     }
 }

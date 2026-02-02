@@ -109,6 +109,11 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
                 FormatRow(worksheet.Row(row), rowDataItem, sheetConfig);
             }
 
+            foreach (var customCell in sheetConfig._customCells)
+            {
+                worksheet.Cell(customCell.Row, customCell.Column).Value = XLCellValue.FromObject(customCell.Value);
+            }
+
             if (sheetConfig._fitInOnePage)
             {
                 worksheet.PageSetup.PrintAreas.Add(sheetConfig._initialRow, sheetConfig._initialColumn, lastRowWithData, initColumn + columns.Count);

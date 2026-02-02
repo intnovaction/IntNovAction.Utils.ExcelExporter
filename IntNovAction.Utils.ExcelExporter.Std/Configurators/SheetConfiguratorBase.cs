@@ -1,4 +1,6 @@
-﻿namespace IntNovAction.Utils.ExcelExporter.Configurators
+﻿using System.Collections.Generic;
+
+namespace IntNovAction.Utils.ExcelExporter.Configurators
 {
     /// <summary>
     /// Tiene que haber una clase base para poder manejar la colección
@@ -15,5 +17,7 @@
         internal string _name { get; set; }
 
         internal int _order { get; set; }
+
+        internal List<CustomCell> _customCells = new List<CustomCell>();
     }
 }

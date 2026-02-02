@@ -18,7 +18,9 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
             var sheetName = "Hoja 1";
 
             var exporter = new Exporter()
-               .AddSheet<TestListItem>(c => c.SetData(items).Name(sheetName).HideColumnHeaders());
+               .AddSheet<TestListItem>(c => 
+                    c.SetData(items).Name(sheetName).HideColumnHeaders()
+                );
 
             var result = exporter.Export();
 
