@@ -200,14 +200,35 @@ namespace IntNovAction.Utils.ExcelExporter.Configurators
         /// <returns></returns>
         public SheetConfigurator<TDataItem> SetCustomContent(int row, int column, string value)
         {
+            return SetCustomContent(row, column, value, null);
+        }
+
+        /// <summary>
+        /// Establece el contenido de una celda personalizada con formato
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="value"></param>
+        /// <param name="formatConfigurator">Expresión para especificar el formato de la celda</param>
+        /// <returns></returns>
+        public SheetConfigurator<TDataItem> SetCustomContent(int row, int column, string value, Action<FormatConfigurator> formatConfigurator)
+        {
             if (row < 1 || column < 1)
                 throw new ArgumentOutOfRangeException("The minimum coordinates are 1, 1");
+
+            FormatConfigurator format = null;
+            if (formatConfigurator != null)
+            {
+                format = new FormatConfigurator();
+                formatConfigurator.Invoke(format);
+            }
 
             _customCells.Add(new CustomCell
             {
                 Row = row,
                 Column = column,
-                Value = value
+                Value = value,
+                Format = format
             });
 
             return this;

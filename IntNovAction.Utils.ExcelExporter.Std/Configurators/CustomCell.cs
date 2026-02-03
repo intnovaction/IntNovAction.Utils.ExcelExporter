@@ -5,5 +5,6 @@
         public int Row { get; set; }
         public int Column { get; set; }
         public object Value { get; set; }
+        public FormatConfigurator Format { get; set; }
     }
 }

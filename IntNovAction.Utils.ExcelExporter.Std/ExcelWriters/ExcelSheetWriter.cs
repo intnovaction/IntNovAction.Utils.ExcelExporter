@@ -111,7 +111,13 @@ namespace IntNovAction.Utils.ExcelExporter.ExcelWriters
 
             foreach (var customCell in sheetConfig._customCells)
             {
-                worksheet.Cell(customCell.Row, customCell.Column).Value = XLCellValue.FromObject(customCell.Value);
+                var cell = worksheet.Cell(customCell.Row, customCell.Column);
+                cell.Value = XLCellValue.FromObject(customCell.Value);
+
+                if (customCell.Format != null)
+                {
+                    ApplyFormat(cell.Style, customCell.Format);
+                }
             }
 
             if (sheetConfig._fitInOnePage)

@@ -186,7 +186,7 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                     c => c.SetData(items)
                           .Name(sheetName)
                           .SetCustomContent(2, 1, "Custom Cell Content")
-                          //.SetCustomContent(3, 1, "oOrmatted Content", format => format.Bold().Italic())
+                          .SetCustomContent(3, 1, "Formatted Content", format => format.Bold().Italic())
                           .SetCoordinates(4, 1)
                );
 
@@ -202,8 +202,15 @@ namespace IntNovAction.Utils.ExcelExporter.Tests.IntegrationTests
                 var workbook = new XLWorkbook(stream);
                 var firstSheet = workbook.Worksheets.Worksheet(sheetName);
 
+                // Verificar celda sin formato
                 firstSheet.Cell(2, 1).GetValue<string>().Should().Be("Custom Cell Content");
-                firstSheet.Cell(3, 1).GetValue<string>().Should().Be(string.Empty);
+
+                // Verificar celda con formato
+                firstSheet.Cell(3, 1).GetValue<string>().Should().Be("Formatted Content");
+                firstSheet.Cell(3, 1).Style.Font.Bold.Should().BeTrue();
+                firstSheet.Cell(3, 1).Style.Font.Italic.Should().BeTrue();
+
+                // Verificar que los datos empiezan en la fila 4
                 firstSheet.Cell(4, 1).Value.Should().NotBeNull();
             }
         }
