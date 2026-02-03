@@ -1,7 +1,6 @@
 # Excel Exporter 
 [![NuGet](https://img.shields.io/nuget/v/Intnovaction.Utils.ExcelExporter.svg)](https://www.nuget.org/packages/IntNovAction.Utils.ExcelExporter/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/intnovaction/IntNovAction.Utils.ExcelExporter?svg=true)](https://ci.appveyor.com/project/IntNovAction/intnovaction-utils-excelexporter)
 
 Permite exportar un IEnumerable a una o varias hoja excel. Aplicando formato a las filas en base a valores de cada uno de los elementos del IEnumerable.
 
@@ -79,6 +78,29 @@ var exporter = new Exporter()
         .SetCoordinates(3, 2)
      );
         
+```
+
+## Añadir contenido personalizado en celdas específicas
+
+Podemos añadir contenido en celdas específicas fuera de la tabla de datos, útil para añadir información adicional, notas o etiquetas.
+
+```c#
+var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport)
+        .Name("Sheet Name")
+        .SetCustomContent(1, 1, "Información adicional")
+     );
+```
+
+También podemos aplicar formato a estas celdas personalizadas:
+
+```c#
+var exporter = new Exporter()
+    .AddSheet<TestListItem>(c => c.SetData(dataToExport)
+        .Name("Sheet Name")
+        .SetCustomContent(1, 1, "Título personalizado", f => f.Bold().FontSize(14))
+        .SetCustomContent(2, 1, "Subtítulo", f => f.Italic())
+     );
 ```
 
 ## Formatear las filas en base a los valores
